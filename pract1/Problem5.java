@@ -7,7 +7,7 @@ public class Problem5{
         System.out.println("Enter interest: ");
         double intrs = in.nextDouble();
         double add = (a*intrs)/100;
-        a = a + add;
+        a += add;
         System.out.println("Answer: " + a);
     }
 }
