@@ -44,10 +44,10 @@ public class Time{
     }
 
     public static void main(String args[]){
-        Time t1 = new Time(14,25,34);
-        Time t2 = new Time(15,30,19);
-        System.out.println(t1.toUniversal());
-        System.out.println(t1.toStandard());
+        // Time t1 = new Time(14,25,34);
+        // Time t2 = new Time(15,30,19);
+        System.out.println(toUniversal());
+        System.out.println(Time.toStandard());
         t1.add(t2);
         System.out.println(t1.toStandard());
     }

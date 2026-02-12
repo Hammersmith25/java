@@ -1,3 +1,4 @@
+package pract2;
 public class Student{
     private static int nextId = 0;
     private String name;
@@ -17,6 +18,12 @@ public class Student{
     public String getName(){
         return name;
     }
+
+    public void setName(String newName)
+    {
+        this.name = newName;
+    }
+
     public int getId(){
         return id;
     }
@@ -25,6 +32,11 @@ public class Student{
     }
     public void incrYear(){
         this.year++;
+    }
+
+    @Override
+    public String toString() {
+        return "Student{id=" + id + ", name='" + name + "', year=" + year + "}";
     }
 
 

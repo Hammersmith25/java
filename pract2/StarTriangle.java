@@ -17,6 +17,7 @@ public class StarTriangle{
     } 
     public static void main(String args[]){
         StarTriangle test = new StarTriangle(8);
+        System.out.println(test.toString());
         test.generate();
     }
 }
