@@ -12,14 +12,14 @@ public class Bank {
         accounts.add(acc);
     }
 
-        public void closeAccount(int accNumber) {
-            for (Account acc : accounts) {
-                if (acc.getAccountNumber() == accNumber) {
-                    accounts.remove(acc);
-                    break;
-                }
+    public void closeAccount(int accNumber) {
+        for (Account acc : accounts) {
+            if (acc.getAccountNumber() == accNumber) {
+                accounts.remove(acc);
+                break;
             }
         }
+    }
 
     public void update() {
         for (Account acc : accounts) {

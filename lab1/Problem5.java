@@ -47,7 +47,6 @@ public class Problem5 {
         dl.kidnap(new Person(Gender.Boy));
         dl.kidnap(new Person(Gender.Boy));
         dl.kidnap(new Person(Gender.Girl));
-        dl.kidnap(new Person(Gender.Girl));
         if(dl.willDragonEatOrNot()){
             System.out.println("The dragon will eat");
         }

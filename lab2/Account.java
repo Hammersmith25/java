@@ -35,7 +35,7 @@ public class Account {
     }
 
     public String toString() {
-        return "Account #" + accNumber + " Balance: " + balance;
+        return "Account: " + accNumber + " Balance: " + balance;
     }
 
     public final void print() {
