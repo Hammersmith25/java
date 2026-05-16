@@ -29,7 +29,7 @@ public final class Database implements Serializable {
     private final Map<String, Course> courses = new LinkedHashMap<>();
     private final List<ResearchProject> researchProjects = new ArrayList<>();
     private final List<News> newsFeed = new ArrayList<>();
-    private final List<EmployeeRequest> employeeRequests = new ArrayList<>();
+    private List<EmployeeRequest> employeeRequests = new ArrayList<>();
 
     private Database() {
     }
@@ -91,12 +91,14 @@ public final class Database implements Serializable {
     }
 
     public synchronized void addEmployeeRequest(EmployeeRequest request) {
+        ensureEmployeeRequests();
         if (!employeeRequests.contains(request)) {
             employeeRequests.add(request);
         }
     }
 
     public synchronized List<EmployeeRequest> getEmployeeRequests() {
+        ensureEmployeeRequests();
         return new ArrayList<>(employeeRequests);
     }
 
@@ -105,8 +107,15 @@ public final class Database implements Serializable {
         courses.clear();
         researchProjects.clear();
         newsFeed.clear();
+        ensureEmployeeRequests();
         employeeRequests.clear();
         save();
+    }
+
+    private void ensureEmployeeRequests() {
+        if (employeeRequests == null) {
+            employeeRequests = new ArrayList<>();
+        }
     }
 
     public synchronized void save() {

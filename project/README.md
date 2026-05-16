@@ -1,3 +1,7 @@
+Start with:
+java -cp out main.Main
+
+
 # University System
 
 This project models a university system with authenticated users, academic course registration, marks, reports, employee messaging, news notifications, and research management.
@@ -33,7 +37,7 @@ Research projects contain a topic, papers, and researcher participants. Adding a
 ## Design Patterns
 
 - Singleton: `Database`.
-- Factory Method/Simple Factory: `UserFactory`.
+- Factory: `UserFactory`.
 - Observer: `News`, `Observer`, and `User`.
 - Strategy: paper, student, and teacher comparators.
 - Role Object/Decorator-like composition: `DefaultResearcher` adds researcher behavior to students and teachers.
