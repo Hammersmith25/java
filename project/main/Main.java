@@ -1,12 +1,16 @@
 package main;
 
+import enums.LessonType;
 import enums.ManagerType;
+import enums.School;
 import enums.TeacherTitle;
 import exceptions.CreditLimitExceededException;
 import exceptions.LowHIndexException;
 import exceptions.NotAResearcherException;
 import model.Admin;
 import model.Course;
+import model.EmployeeRequest;
+import model.Lesson;
 import model.Manager;
 import model.Mark;
 import model.News;
@@ -18,10 +22,14 @@ import model.Student;
 import model.Teacher;
 import model.User;
 import repository.Database;
+import service.AuthenticationService;
 import service.PaperByCitationsComparator;
 import service.PaperByDateComparator;
+import service.PaperByPagesComparator;
 import service.PaperByTitleComparator;
 import service.ResearchService;
+import service.StudentByGpaComparator;
+import service.TeacherByNameComparator;
 import service.UserFactory;
 
 import java.time.LocalDate;
@@ -34,6 +42,7 @@ public class Main {
         database.reset();
 
         UserFactory userFactory = new UserFactory();
+        AuthenticationService authenticationService = new AuthenticationService(database);
         ResearchService researchService = new ResearchService();
 
         Admin admin = (Admin) userFactory.createUser("ADMIN", Map.of(
@@ -42,6 +51,7 @@ public class Main {
                 "firstName", "Alice",
                 "lastName", "Admin",
                 "email", "alice.admin@university.edu",
+                "school", School.GENERAL,
                 "salary", 350000.0,
                 "hireDate", LocalDate.of(2020, 1, 10)
         ));
@@ -52,6 +62,7 @@ public class Main {
                 "firstName", "Mark",
                 "lastName", "Manager",
                 "email", "mark.manager@university.edu",
+                "school", School.SITE,
                 "salary", 300000.0,
                 "hireDate", LocalDate.of(2021, 2, 15),
                 "type", ManagerType.OR
@@ -63,6 +74,7 @@ public class Main {
                 "firstName", "Nora",
                 "lastName", "Professor",
                 "email", "nora.professor@university.edu",
+                "school", School.SITE,
                 "salary", 420000.0,
                 "hireDate", LocalDate.of(2018, 9, 1),
                 "title", TeacherTitle.PROFESSOR
@@ -74,6 +86,7 @@ public class Main {
                 "firstName", "Leo",
                 "lastName", "Lecturer",
                 "email", "leo.lecturer@university.edu",
+                "school", School.SITE,
                 "salary", 260000.0,
                 "hireDate", LocalDate.of(2022, 3, 1),
                 "title", TeacherTitle.LECTOR
@@ -86,6 +99,7 @@ public class Main {
                 "firstName", "Sara",
                 "lastName", "Senior",
                 "email", "sara.senior@university.edu",
+                "school", School.SITE,
                 "major", "Computer Science",
                 "year", 4,
                 "credits", 0,
@@ -98,6 +112,7 @@ public class Main {
                 "firstName", "Jules",
                 "lastName", "Junior",
                 "email", "jules.junior@university.edu",
+                "school", School.SITE,
                 "major", "Data Science",
                 "year", 3,
                 "credits", 0,
@@ -111,10 +126,14 @@ public class Main {
         admin.addUser(seniorStudent);
         admin.addUser(juniorStudent);
 
+        authenticationService.requireAuthenticated("A001", "admin_hash");
+
         Course oop = new Course("CS301", "Advanced OOP", 5);
         Course researchMethods = new Course("CS410", "Research Methods", 4);
         Course distributedSystems = new Course("CS420", "Distributed Systems", 6);
         Course machineLearning = new Course("CS430", "Machine Learning", 7);
+        oop.addLesson(new Lesson(LessonType.LECTURE));
+        oop.addLesson(new Lesson(LessonType.PRACTICE));
 
         database.addCourse(oop);
         database.addCourse(researchMethods);
@@ -122,8 +141,10 @@ public class Main {
         database.addCourse(machineLearning);
 
         manager.assignCourse(professor, oop);
+        manager.assignCourse(lecturer, oop);
         manager.assignCourse(professor, researchMethods);
         manager.assignCourse(lecturer, distributedSystems);
+        manager.addCourseForRegistration(oop, null, null);
 
         try {
             seniorStudent.registerForCourse(oop);
@@ -223,6 +244,9 @@ public class Main {
         System.out.println("\nProfessor papers sorted by citations:");
         professor.getResearcherRole().printPapers(new PaperByCitationsComparator());
 
+        System.out.println("\nProfessor papers sorted by article length:");
+        professor.getResearcherRole().printPapers(new PaperByPagesComparator());
+
         System.out.println("\nAll researchers' papers sorted by publish date:");
         researchService.printAllResearchersPapers(database.getUsers(), new PaperByDateComparator());
 
@@ -280,8 +304,26 @@ public class Main {
                 .map(Researcher::getResearcherName)
                 .ifPresent(System.out::println);
 
+        System.out.println("\nTop cited SITE researcher in 2024:");
+        researchService.findTopCitedResearcherBySchoolOfYear(database.getUsers(), School.SITE, 2024)
+                .map(Researcher::getResearcherName)
+                .ifPresent(System.out::println);
+
+        EmployeeRequest request = lecturer.createRequest("Approve conference travel budget.");
+        request.signByDean(manager);
+        request.signByRector(admin);
+
         System.out.println("\nManager messages:");
         manager.getMessages().forEach(System.out::println);
+
+        System.out.println("\nStudents sorted by GPA:");
+        manager.viewStudentsSorted(new StudentByGpaComparator()).forEach(System.out::println);
+
+        System.out.println("\nTeachers sorted alphabetically:");
+        manager.viewTeachersSorted(new TeacherByNameComparator()).forEach(System.out::println);
+
+        System.out.println("\nSigned employee requests:");
+        manager.viewSignedEmployeeRequests().forEach(System.out::println);
 
         System.out.println("\nStudent notifications:");
         seniorStudent.getNotifications().forEach(System.out::println);

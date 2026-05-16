@@ -1,6 +1,8 @@
 package service;
 
+import enums.DegreeLevel;
 import enums.ManagerType;
+import enums.School;
 import enums.TeacherTitle;
 import model.Admin;
 import model.Manager;
@@ -14,7 +16,7 @@ import java.util.Map;
 
 public class UserFactory {
     public User createUser(String type, Map<String, Object> attributes) {
-        return switch (type.toUpperCase()) {
+        User user = switch (type.toUpperCase()) {
             case "STUDENT" -> new Student(
                     getString(attributes, "id"),
                     getString(attributes, "passwordHash"),
@@ -66,6 +68,13 @@ public class UserFactory {
             );
             default -> throw new IllegalArgumentException("Unsupported user type: " + type);
         };
+        if (attributes.containsKey("school")) {
+            user.setSchool((School) attributes.get("school"));
+        }
+        if (user instanceof Student student && attributes.containsKey("degreeLevel")) {
+            student.setDegreeLevel((DegreeLevel) attributes.get("degreeLevel"));
+        }
+        return user;
     }
 
     private String getString(Map<String, Object> attributes, String key) {

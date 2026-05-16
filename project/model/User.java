@@ -1,5 +1,7 @@
 package model;
 
+import enums.School;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -15,6 +17,7 @@ public abstract class User implements Observer, Serializable {
     private String firstName;
     private String lastName;
     private String email;
+    private School school = School.GENERAL;
     private final List<String> notifications = new ArrayList<>();
 
     protected User(String id, String passwordHash, String firstName, String lastName, String email) {
@@ -78,6 +81,14 @@ public abstract class User implements Observer, Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public School getSchool() {
+        return school;
+    }
+
+    public void setSchool(School school) {
+        this.school = school == null ? School.GENERAL : school;
     }
 
     public List<String> getNotifications() {

@@ -18,6 +18,9 @@ public class Mark implements Serializable {
     }
 
     public Mark(double attestation1, double attestation2, double finalExam) {
+        validatePart("First attestation", attestation1, 30);
+        validatePart("Second attestation", attestation2, 30);
+        validatePart("Final exam", finalExam, 40);
         this.attestation1 = attestation1;
         this.attestation2 = attestation2;
         this.finalExam = finalExam;
@@ -29,6 +32,7 @@ public class Mark implements Serializable {
     }
 
     public void setAttestation1(double attestation1) {
+        validatePart("First attestation", attestation1, 30);
         this.attestation1 = attestation1;
         calculateTotal();
     }
@@ -38,6 +42,7 @@ public class Mark implements Serializable {
     }
 
     public void setAttestation2(double attestation2) {
+        validatePart("Second attestation", attestation2, 30);
         this.attestation2 = attestation2;
         calculateTotal();
     }
@@ -47,6 +52,7 @@ public class Mark implements Serializable {
     }
 
     public void setFinalExam(double finalExam) {
+        validatePart("Final exam", finalExam, 40);
         this.finalExam = finalExam;
         calculateTotal();
     }
@@ -57,6 +63,16 @@ public class Mark implements Serializable {
 
     public void calculateTotal() {
         this.total = attestation1 + attestation2 + finalExam;
+    }
+
+    public boolean isFailed() {
+        return total < 50;
+    }
+
+    private void validatePart(String partName, double value, double maxValue) {
+        if (value < 0 || value > maxValue) {
+            throw new IllegalArgumentException(partName + " must be between 0 and " + maxValue + ".");
+        }
     }
 
     @Override

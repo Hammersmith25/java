@@ -1,5 +1,7 @@
 package model;
 
+import repository.Database;
+
 import java.io.Serial;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -31,6 +33,12 @@ public abstract class Employee extends User {
         }
         messages.add(message);
         receiver.receiveMessage(message);
+    }
+
+    public EmployeeRequest createRequest(String content) {
+        EmployeeRequest request = new EmployeeRequest(this, content);
+        Database.getInstance().addEmployeeRequest(request);
+        return request;
     }
 
     protected void receiveMessage(Message message) {

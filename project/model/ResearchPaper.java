@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class ResearchPaper implements Serializable {
+public class ResearchPaper implements Serializable, Comparable<ResearchPaper> {
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -95,11 +95,22 @@ public class ResearchPaper implements Serializable {
     public String toString() {
         return "ResearchPaper{" +
                 "title='" + title + '\'' +
+                ", authors=" + authors +
                 ", journal='" + journal + '\'' +
                 ", citations=" + citations +
+                ", pages=" + pages +
                 ", doi='" + doi + '\'' +
                 ", publishDate=" + publishDate +
                 '}';
+    }
+
+    @Override
+    public int compareTo(ResearchPaper other) {
+        int dateComparison = publishDate.compareTo(other.publishDate);
+        if (dateComparison != 0) {
+            return dateComparison;
+        }
+        return title.compareToIgnoreCase(other.title);
     }
 
     @Override

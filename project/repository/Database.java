@@ -1,6 +1,7 @@
 package repository;
 
 import model.Course;
+import model.EmployeeRequest;
 import model.News;
 import model.ResearchProject;
 import model.User;
@@ -28,6 +29,7 @@ public final class Database implements Serializable {
     private final Map<String, Course> courses = new LinkedHashMap<>();
     private final List<ResearchProject> researchProjects = new ArrayList<>();
     private final List<News> newsFeed = new ArrayList<>();
+    private final List<EmployeeRequest> employeeRequests = new ArrayList<>();
 
     private Database() {
     }
@@ -88,11 +90,22 @@ public final class Database implements Serializable {
         return new ArrayList<>(newsFeed);
     }
 
+    public synchronized void addEmployeeRequest(EmployeeRequest request) {
+        if (!employeeRequests.contains(request)) {
+            employeeRequests.add(request);
+        }
+    }
+
+    public synchronized List<EmployeeRequest> getEmployeeRequests() {
+        return new ArrayList<>(employeeRequests);
+    }
+
     public synchronized void reset() {
         users.clear();
         courses.clear();
         researchProjects.clear();
         newsFeed.clear();
+        employeeRequests.clear();
         save();
     }
 

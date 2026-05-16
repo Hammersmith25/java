@@ -5,6 +5,7 @@ import repository.Database;
 
 import java.io.Serial;
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 
 public class Manager extends Employee {
@@ -37,21 +38,62 @@ public class Manager extends Employee {
         course.addInstructor(teacher);
     }
 
+    public void addCourseForRegistration(Course course, String intendedMajor, Integer intendedYear) {
+        course.setIntendedMajor(intendedMajor);
+        course.setIntendedYear(intendedYear);
+        Database.getInstance().addCourse(course);
+    }
+
     public Report createReport() {
         Database database = Database.getInstance();
+        List<Mark> marks = database.getCourses().stream()
+                .flatMap(course -> course.getStudents().stream()
+                        .map(student -> student.getTranscript().getMark(course))
+                        .filter(mark -> mark != null && (mark.getTotal() > 0)))
+                .toList();
+        double average = marks.stream().mapToDouble(Mark::getTotal).average().orElse(0.0);
+        long failed = marks.stream().filter(Mark::isFailed).count();
         String content = """
-                University report
+                Academic performance report
                 Users: %d
                 Courses: %d
                 Projects: %d
                 News count: %d
+                Graded records: %d
+                Average total mark: %.2f
+                Failed records: %d
                 """.formatted(
                 database.getUsers().size(),
                 database.getCourses().size(),
                 database.getResearchProjects().size(),
-                database.getNewsFeed().size()
+                database.getNewsFeed().size(),
+                marks.size(),
+                average,
+                failed
         );
         return new Report(content);
+    }
+
+    public List<Student> viewStudentsSorted(Comparator<Student> comparator) {
+        return Database.getInstance().getUsers().stream()
+                .filter(Student.class::isInstance)
+                .map(Student.class::cast)
+                .sorted(comparator)
+                .toList();
+    }
+
+    public List<Teacher> viewTeachersSorted(Comparator<Teacher> comparator) {
+        return Database.getInstance().getUsers().stream()
+                .filter(Teacher.class::isInstance)
+                .map(Teacher.class::cast)
+                .sorted(comparator)
+                .toList();
+    }
+
+    public List<EmployeeRequest> viewSignedEmployeeRequests() {
+        return Database.getInstance().getEmployeeRequests().stream()
+                .filter(EmployeeRequest::isFullySigned)
+                .toList();
     }
 
     public void manageNews(News news) {
