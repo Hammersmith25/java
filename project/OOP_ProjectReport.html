@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OOP Project Report - University System</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 18mm 16mm;
+        }
+
+        :root {
+            --ink: #172033;
+            --muted: #5d687c;
+            --line: #d8dee8;
+            --soft: #f5f7fb;
+            --brand: #14536b;
+            --brand-dark: #0b3445;
+            --accent: #b45309;
+            --success: #047857;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            color: var(--ink);
+            background: #eef2f7;
+            line-height: 1.55;
+        }
+
+        .page {
+            width: 210mm;
+            min-height: 297mm;
+            margin: 0 auto 18px;
+            padding: 18mm 16mm;
+            background: #ffffff;
+            box-shadow: 0 16px 38px rgba(15, 23, 42, 0.12);
+            break-after: page;
+        }
+
+        .page:last-child {
+            break-after: auto;
+        }
+
+        .cover {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background: linear-gradient(180deg, #0b3445 0%, #14536b 58%, #ffffff 58%, #ffffff 100%);
+            color: #ffffff;
+        }
+
+        .cover h1 {
+            margin: 0;
+            max-width: 145mm;
+            font-size: 34pt;
+            line-height: 1.06;
+            letter-spacing: 0;
+        }
+
+        .cover .subtitle {
+            max-width: 142mm;
+            margin-top: 12px;
+            color: #d7ecf4;
+            font-size: 12.5pt;
+        }
+
+        .cover-card {
+            margin-top: 34mm;
+            color: var(--ink);
+            background: #ffffff;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 14mm;
+            box-shadow: 0 14px 32px rgba(15, 23, 42, 0.15);
+        }
+
+        h1,
+        h2,
+        h3,
+        h4 {
+            letter-spacing: 0;
+            line-height: 1.2;
+        }
+
+        h2 {
+            margin: 0 0 14px;
+            color: var(--brand-dark);
+            font-size: 22pt;
+            border-bottom: 2px solid var(--brand);
+            padding-bottom: 7px;
+        }
+
+        h3 {
+            margin: 18px 0 8px;
+            color: var(--brand);
+            font-size: 14.2pt;
+        }
+
+        h4 {
+            margin: 12px 0 6px;
+            color: var(--brand-dark);
+            font-size: 10.5pt;
+            text-transform: uppercase;
+        }
+
+        p {
+            margin: 0 0 9px;
+        }
+
+        ul,
+        ol {
+            margin: 6px 0 11px;
+            padding-left: 19px;
+        }
+
+        li {
+            margin-bottom: 4px;
+        }
+
+        .muted {
+            color: var(--muted);
+        }
+
+        .meta-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 14px;
+        }
+
+        .meta-box,
+        .note-box,
+        .screenshot-box,
+        .class-box,
+        .diagram-box,
+        .code-card {
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: #ffffff;
+        }
+
+        .meta-box {
+            padding: 10px 12px;
+        }
+
+        .label {
+            display: block;
+            color: var(--muted);
+            font-size: 8.5pt;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .value {
+            display: block;
+            margin-top: 3px;
+            font-size: 11pt;
+            font-weight: 700;
+        }
+
+        .toc {
+            columns: 2;
+            column-gap: 18mm;
+            padding-left: 0;
+            list-style: none;
+        }
+
+        .toc li {
+            break-inside: avoid;
+            border-bottom: 1px dotted #b9c2cf;
+            padding: 6px 0;
+        }
+
+        .toc a {
+            color: var(--ink);
+            text-decoration: none;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 14px 0;
+        }
+
+        .summary-card {
+            background: var(--soft);
+            border-left: 4px solid var(--brand);
+            padding: 11px 12px;
+            border-radius: 6px;
+        }
+
+        .summary-card strong {
+            display: block;
+            margin-bottom: 4px;
+            color: var(--brand-dark);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0 14px;
+            font-size: 9.2pt;
+        }
+
+        th,
+        td {
+            border: 1px solid var(--line);
+            padding: 7px 8px;
+            vertical-align: top;
+            text-align: left;
+        }
+
+        th {
+            background: #edf5f8;
+            color: var(--brand-dark);
+        }
+
+        .diagram-box {
+            padding: 12px;
+            margin: 12px 0 18px;
+            text-align: center;
+        }
+
+        .diagram-box img {
+            max-width: 100%;
+            max-height: 215mm;
+            object-fit: contain;
+        }
+
+        .diagram-caption {
+            margin-top: 8px;
+            color: var(--muted);
+            font-size: 9pt;
+            text-align: left;
+        }
+
+        .class-box {
+            padding: 13px 14px;
+            margin-bottom: 12px;
+            break-inside: avoid;
+        }
+
+        .class-box h3 {
+            margin-top: 0;
+        }
+
+        .tag-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+
+        .tag {
+            display: inline-block;
+            border-radius: 999px;
+            background: #e8f4f8;
+            color: var(--brand-dark);
+            padding: 3px 8px;
+            font-size: 8pt;
+            font-weight: 700;
+        }
+
+        .tag.service {
+            background: #edf2f7;
+            color: #334155;
+        }
+
+        .tag.repository {
+            background: #e7f7ef;
+            color: var(--success);
+        }
+
+        .tag.abstract {
+            background: #fff4e5;
+            color: var(--accent);
+        }
+
+        .code-card {
+            margin: 12px 0 16px;
+            overflow: hidden;
+            break-inside: avoid;
+        }
+
+        .code-title {
+            padding: 8px 11px;
+            background: #f8fafc;
+            border-bottom: 1px solid var(--line);
+            color: var(--brand-dark);
+            font-weight: 700;
+            font-size: 9.5pt;
+        }
+
+        pre {
+            margin: 0;
+            overflow-x: auto;
+            background: #111827;
+            color: #edf2f7;
+            padding: 11px 13px;
+            font: 8.8pt/1.45 Consolas, "Courier New", monospace;
+            white-space: pre-wrap;
+        }
+
+        code {
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 0.95em;
+        }
+
+        .note-box,
+        .screenshot-box {
+            min-height: 46mm;
+            margin: 12px 0 16px;
+            padding: 12px;
+            background: repeating-linear-gradient(
+                0deg,
+                #ffffff 0,
+                #ffffff 10mm,
+                #f1f5f9 10.2mm
+            );
+        }
+
+        .note-box.filled {
+            min-height: auto;
+            background: #ffffff;
+        }
+
+        .screenshot-box {
+            min-height: auto;
+            color: var(--muted);
+            background: #f8fafc;
+            border-style: solid;
+            font-weight: 400;
+        }
+
+        .screenshot-box img {
+            display: block;
+            width: 100%;
+            max-height: 145mm;
+            object-fit: contain;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            background: #111827;
+        }
+
+        .screenshot-box p {
+            margin: 8px 0 0;
+            color: var(--muted);
+            font-size: 9pt;
+        }
+
+        .footer-note {
+            margin-top: 16px;
+            color: var(--muted);
+            font-size: 8.5pt;
+            text-align: center;
+        }
+
+        @media print {
+            body {
+                background: #ffffff;
+            }
+
+            .page {
+                width: auto;
+                min-height: auto;
+                margin: 0;
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="page cover">
+        <div>
+            <h1>Object-Oriented Programming Project Report</h1>
+            <p class="subtitle">University System: users, courses, grading, research, news, authentication, and persistence.</p>
+        </div>
+        <div class="cover-card">
+            <h2>Project Information</h2>
+            <div class="meta-grid">
+                <div class="meta-box">
+                    <span class="label">Project</span>
+                    <span class="value">University Management System</span>
+                </div>
+                <div class="meta-box">
+                    <span class="label">Language</span>
+                    <span class="value">Java</span>
+                </div>
+                <div class="meta-box">
+                    <span class="label">Architecture</span>
+                    <span class="value">Model-Service-Repository</span>
+                </div>
+                <div class="meta-box">
+                    <span class="label">Main Package Root</span>
+                    <span class="value">project</span>
+                </div>
+                <div class="meta-box">
+                    <span class="label">Prepared By</span>
+                    <span class="value">Danil Goncharov(24B031726), Darkhan Izbasarov(24B031815)</span>
+                </div>
+                <div class="meta-box">
+                    <span class="label">Date</span>
+                    <span class="value">May 17, 2026</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="page">
+        <h2 id="toc">Table of Contents</h2>
+        <ol class="toc">
+            <li><a href="#abstract">1. Abstract</a></li>
+            <li><a href="#objectives">2. Project Objectives</a></li>
+            <li><a href="#architecture">3. Architecture Overview</a></li>
+            <li><a href="#uml">4. UML Diagrams</a></li>
+            <li><a href="#classes">5. Class and Interface Descriptions</a></li>
+            <li><a href="#fragments">6. Code Fragments</a></li>
+            <li><a href="#patterns">7. OOP Principles and Design Patterns</a></li>
+            <li><a href="#management">8. Project Management Notes</a></li>
+            <li><a href="#screenshots">9. Screenshots</a></li>
+            <li><a href="#conclusion">10. Conclusion</a></li>
+        </ol>
+
+        <h2 id="abstract">1. Abstract</h2>
+        <p>
+            This report documents a Java-based university management system developed with object-oriented
+            programming principles. The system models students, teachers, managers, administrators, courses,
+            transcripts, marks, research activities, news notifications, employee requests, authentication,
+            and serialized persistence.
+        </p>
+        <p>
+            The application uses a clear package structure: domain entities are stored in <code>model</code>,
+            enumerations in <code>enums</code>, custom checked exceptions in <code>exceptions</code>, business
+            services and comparators in <code>service</code>, and centralized persistence in
+            <code>repository</code>. UML diagrams are included to show static relationships, runtime object
+            examples, and use-case behavior.
+        </p>
+
+        <h2 id="objectives">2. Project Objectives</h2>
+        <ul>
+            <li>Model the core roles of a university system: students, teachers, managers, administrators, and researchers.</li>
+            <li>Implement course registration, teacher assignment, transcript storage, grade calculation, and GPA recalculation.</li>
+            <li>Support staff communication, employee requests, news publishing, and observer-based notifications.</li>
+            <li>Provide research-related operations such as papers, projects, h-index calculation, and citation-based ranking.</li>
+            <li>Apply OOP concepts including inheritance, polymorphism, encapsulation, interfaces, abstraction, composition, and exceptions.</li>
+            <li>Persist application state through a singleton database serialized to <code>database.ser</code>.</li>
+        </ul>
+
+        <h2 id="architecture">3. Architecture Overview</h2>
+        <div class="summary-grid">
+            <div class="summary-card">
+                <strong>Model Layer</strong>
+                Entities such as <code>User</code>, <code>Student</code>, <code>Teacher</code>, <code>Course</code>, and <code>ResearchPaper</code>.
+            </div>
+            <div class="summary-card">
+                <strong>Service Layer</strong>
+                Authentication, research operations, sorting comparators, and user creation factory.
+            </div>
+            <div class="summary-card">
+                <strong>Repository Layer</strong>
+                Singleton <code>Database</code> storing users, courses, projects, news, and requests.
+            </div>
+        </div>
+        <p>
+            The domain model is built around an inheritance hierarchy rooted in <code>User</code>. Staff roles
+            inherit from <code>Employee</code>, while <code>Student</code> extends <code>User</code> directly.
+            Research behavior is extracted into a <code>Researcher</code> interface so it can be implemented by
+            <code>ResearchEmployee</code> directly or delegated to <code>DefaultResearcher</code> for students
+            and teachers.
+        </p>
+    </section>
+
+    <section class="page">
+        <h2 id="uml">4. UML Diagrams</h2>
+        <h3>4.1 Class Diagram</h3>
+        <div class="diagram-box">
+            <img src="../out/project/class-diagram/class-diagram.png" alt="Class diagram">
+            <p class="diagram-caption">
+                The class diagram shows packages, inheritance, interface implementation, composition, dependencies,
+                repository relationships, comparators, enums, and custom exceptions.
+            </p>
+        </div>
+    </section>
+
+    <section class="page">
+        <h2>4.2 Object Diagram</h2>
+        <div class="diagram-box">
+            <img src="../out/project/object-diagram/object-diagram.png" alt="Object diagram">
+            <p class="diagram-caption">
+                The object diagram illustrates a possible runtime state with concrete users, courses, messages,
+                papers, projects, news, and database collections.
+            </p>
+        </div>
+
+        <h2>4.3 Use-Case Diagram</h2>
+        <div class="diagram-box">
+            <img src="../out/project/use-case-diagram/use-case-diagram.png" alt="Use-case diagram">
+            <p class="diagram-caption">
+                The use-case diagram summarizes how students, teachers, managers, administrators, researchers,
+                and employees interact with the system.
+            </p>
+        </div>
+    </section>
+
+    <section class="page">
+        <h2 id="classes">5. Class and Interface Descriptions</h2>
+        <h3>5.1 Core User Hierarchy</h3>
+        <div class="class-box">
+            <h3>User</h3>
+            <div class="tag-row"><span class="tag abstract">abstract class</span><span class="tag">model</span></div>
+            <p><strong>Purpose:</strong> Base abstraction for all users in the system. It stores ID, password hash, name, email, school, and notifications.</p>
+            <p><strong>Important behavior:</strong> Implements <code>Observer</code> so users can receive <code>News</code> updates. Provides <code>login()</code>, <code>logout()</code>, and <code>getFullName()</code>.</p>
+        </div>
+        <div class="class-box">
+            <h3>Employee</h3>
+            <div class="tag-row"><span class="tag abstract">abstract class</span><span class="tag">model</span></div>
+            <p><strong>Purpose:</strong> Shared superclass for staff roles. Adds salary, hire date, direct messages, and request creation.</p>
+            <p><strong>Important behavior:</strong> <code>sendMessage()</code> stores a message for sender and receiver, while <code>createRequest()</code> adds an <code>EmployeeRequest</code> to the database.</p>
+        </div>
+        <div class="class-box">
+            <h3>Student</h3>
+            <div class="tag-row"><span class="tag">class</span><span class="tag">Comparable</span></div>
+            <p><strong>Purpose:</strong> Represents a learner with major, year, degree level, credits, GPA, transcript, courses, and optional researcher role.</p>
+            <p><strong>Important behavior:</strong> Validates course availability and credit limit during registration, tracks pending registrations, updates marks, recalculates GPA, rates teachers, and assigns research supervisors.</p>
+        </div>
+        <div class="class-box">
+            <h3>Teacher</h3>
+            <div class="tag-row"><span class="tag">class</span><span class="tag">model</span></div>
+            <p><strong>Purpose:</strong> Represents teaching staff responsible for courses, marks, complaints, ratings, and optional research activity.</p>
+            <p><strong>Important behavior:</strong> Ensures the teacher is assigned to a course before grading students. Professors automatically become researchers.</p>
+        </div>
+        <div class="class-box">
+            <h3>Manager</h3>
+            <div class="tag-row"><span class="tag">class</span><span class="tag">model</span></div>
+            <p><strong>Purpose:</strong> Coordinates academic administration, including course registration, teacher assignment, reports, signed requests, and news publishing.</p>
+            <p><strong>Important behavior:</strong> Uses <code>Database</code> to collect report data and publish news to all users through the observer mechanism.</p>
+        </div>
+        <div class="class-box">
+            <h3>Admin</h3>
+            <div class="tag-row"><span class="tag">class</span><span class="tag">model</span></div>
+            <p><strong>Purpose:</strong> Manages user accounts and records actions in a local admin log.</p>
+            <p><strong>Important behavior:</strong> Delegates add, remove, and update operations to the singleton <code>Database</code>.</p>
+        </div>
+        <div class="class-box">
+            <h3>ResearchEmployee</h3>
+            <div class="tag-row"><span class="tag">class</span><span class="tag">Researcher</span></div>
+            <p><strong>Purpose:</strong> Employee role with direct research capabilities.</p>
+            <p><strong>Important behavior:</strong> Delegates paper and project operations to an internal <code>DefaultResearcher</code>.</p>
+        </div>
+    </section>
+
+    <section class="page">
+        <h2>5.2 Academic and Communication Classes</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Class / Interface</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                    <th>Key Methods / Fields</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>Course</code></td>
+                    <td>Class</td>
+                    <td>Academic course with code, name, credits, intended major/year, instructors, students, and lessons.</td>
+                    <td><code>addInstructor</code>, <code>addStudent</code>, <code>addLesson</code>, <code>isAvailableFor</code></td>
+                </tr>
+                <tr>
+                    <td><code>Lesson</code></td>
+                    <td>Class</td>
+                    <td>Represents a lesson belonging to a course.</td>
+                    <td><code>LessonType type</code></td>
+                </tr>
+                <tr>
+                    <td><code>Transcript</code></td>
+                    <td>Class</td>
+                    <td>Stores a map of courses to marks for a student.</td>
+                    <td><code>addCourse</code>, <code>updateRecord</code>, <code>getMark</code></td>
+                </tr>
+                <tr>
+                    <td><code>Mark</code></td>
+                    <td>Class</td>
+                    <td>Stores attestation and final exam grades, calculates total, and determines failure.</td>
+                    <td><code>calculateTotal</code>, <code>isFailed</code></td>
+                </tr>
+                <tr>
+                    <td><code>Message</code></td>
+                    <td>Class</td>
+                    <td>Represents staff communication between sender and receiver.</td>
+                    <td><code>sender</code>, <code>receiver</code>, <code>content</code>, <code>timestamp</code></td>
+                </tr>
+                <tr>
+                    <td><code>EmployeeRequest</code></td>
+                    <td>Class</td>
+                    <td>Formal employee request with dean and rector signature workflow.</td>
+                    <td><code>signByDean</code>, <code>signByRector</code>, <code>isFullySigned</code></td>
+                </tr>
+                <tr>
+                    <td><code>News</code></td>
+                    <td>Class</td>
+                    <td>Announcement entity that supports observer subscriptions and publishing.</td>
+                    <td><code>subscribe</code>, <code>unsubscribe</code>, <code>notifyObservers</code>, <code>publish</code></td>
+                </tr>
+                <tr>
+                    <td><code>Report</code></td>
+                    <td>Class</td>
+                    <td>Simple container for generated report text.</td>
+                    <td><code>content</code></td>
+                </tr>
+                <tr>
+                    <td><code>Observer</code></td>
+                    <td>Interface</td>
+                    <td>Notification interface implemented by users.</td>
+                    <td><code>update(News news)</code></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>5.3 Research Classes and Interfaces</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Class / Interface</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                    <th>Key Methods / Fields</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>Researcher</code></td>
+                    <td>Interface</td>
+                    <td>Defines the contract for any object that can participate in research.</td>
+                    <td><code>addPaper</code>, <code>calculateHIndex</code>, <code>joinProject</code></td>
+                </tr>
+                <tr>
+                    <td><code>DefaultResearcher</code></td>
+                    <td>Class</td>
+                    <td>Reusable implementation of research behavior owned by a user.</td>
+                    <td><code>owner</code>, <code>papers</code>, <code>projects</code></td>
+                </tr>
+                <tr>
+                    <td><code>ResearchPaper</code></td>
+                    <td>Class</td>
+                    <td>Publication with title, authors, journal, citations, pages, DOI, and publish date.</td>
+                    <td><code>Comparable&lt;ResearchPaper&gt;</code>, <code>compareTo</code></td>
+                </tr>
+                <tr>
+                    <td><code>ResearchProject</code></td>
+                    <td>Class</td>
+                    <td>Research project with topic, papers, and researcher participants.</td>
+                    <td><code>addPaper</code>, <code>addParticipant</code></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section class="page">
+        <h2>5.4 Repository, Services, Comparators, Enums, and Exceptions</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td><code>Database</code></td><td>Repository</td><td>Singleton persistent store for users, courses, research projects, news, and employee requests.</td></tr>
+                <tr><td><code>AuthenticationService</code></td><td>Service</td><td>Validates user ID and password hash against the database.</td></tr>
+                <tr><td><code>ResearchService</code></td><td>Service</td><td>Finds researchers, adds papers, ranks citation leaders, and adds researchers to projects.</td></tr>
+                <tr><td><code>UserFactory</code></td><td>Factory Service</td><td>Creates concrete user objects from a type string and attribute map.</td></tr>
+                <tr><td><code>PaperByCitationsComparator</code></td><td>Comparator</td><td>Sorts research papers by citation count.</td></tr>
+                <tr><td><code>PaperByDateComparator</code></td><td>Comparator</td><td>Sorts research papers by publication date.</td></tr>
+                <tr><td><code>PaperByPagesComparator</code></td><td>Comparator</td><td>Sorts research papers by page count.</td></tr>
+                <tr><td><code>PaperByTitleComparator</code></td><td>Comparator</td><td>Sorts research papers alphabetically by title.</td></tr>
+                <tr><td><code>StudentByGpaComparator</code></td><td>Comparator</td><td>Sorts students by GPA.</td></tr>
+                <tr><td><code>StudentByNameComparator</code></td><td>Comparator</td><td>Sorts students by full name.</td></tr>
+                <tr><td><code>TeacherByNameComparator</code></td><td>Comparator</td><td>Sorts teachers by full name.</td></tr>
+                <tr><td><code>DegreeLevel</code>, <code>LessonType</code>, <code>ManagerType</code>, <code>RequestStatus</code>, <code>School</code>, <code>TeacherTitle</code></td><td>Enums</td><td>Constrained values for degree, lesson, manager, request, school, and teacher title states.</td></tr>
+                <tr><td><code>CreditLimitExceededException</code></td><td>Exception</td><td>Thrown when a student exceeds the maximum credit limit.</td></tr>
+                <tr><td><code>LowHIndexException</code></td><td>Exception</td><td>Thrown when a supervisor does not meet the required h-index.</td></tr>
+                <tr><td><code>NotAResearcherException</code></td><td>Exception</td><td>Thrown when a non-researcher is added to a research project.</td></tr>
+            </tbody>
+        </table>
+
+        <h2 id="fragments">6. Code Fragments</h2>
+        <div class="code-card">
+            <div class="code-title">Course registration with credit and course availability checks</div>
+            <pre><code>public void registerForCourse(Course course) throws CreditLimitExceededException {
+    if (course == null || registeredCourses.contains(course) || pendingCourses.contains(course)) {
+        return;
+    }
+    if (!course.isAvailableFor(this)) {
+        throw new IllegalArgumentException("Course is not intended for this student's major/year.");
+    }
+    int plannedCredits = credits + pendingCourses.stream()
+            .mapToInt(Course::getCredits)
+            .sum() + course.getCredits();
+    if (plannedCredits > MAX_CREDITS) {
+        throw new CreditLimitExceededException("Credit limit exceeded.");
+    }
+    pendingCourses.add(course);
+}</code></pre>
+        </div>
+
+        <div class="code-card">
+            <div class="code-title">Authentication service with Optional result</div>
+            <pre><code>public Optional&lt;User&gt; authenticate(String userId, String passwordHash) {
+    User user = database.getUser(userId);
+    if (user == null || !user.getPasswordHash().equals(passwordHash)) {
+        return Optional.empty();
+    }
+    user.login();
+    return Optional.of(user);
+}</code></pre>
+        </div>
+    </section>
+
+    <section class="page">
+        <h2>6. Code Fragments Continued</h2>
+        <div class="code-card">
+            <div class="code-title">Singleton database loading and saving</div>
+            <pre><code>private static Database INSTANCE = loadDatabase();
+
+public static Database getInstance() {
+    return INSTANCE;
+}
+
+public synchronized void save() {
+    try (ObjectOutputStream outputStream =
+            new ObjectOutputStream(new FileOutputStream(FILE_NAME))) {
+        outputStream.writeObject(this);
+    } catch (IOException e) {
+        throw new IllegalStateException("Unable to save database.", e);
+    }
+}</code></pre>
+        </div>
+
+        <div class="code-card">
+            <div class="code-title">Researcher extraction across different user types</div>
+            <pre><code>public Optional&lt;Researcher&gt; extractResearcher(User user) {
+    if (user instanceof Researcher directResearcher) {
+        return Optional.of(directResearcher);
+    }
+    if (user instanceof Student student &amp;&amp; student.isResearcher()) {
+        return Optional.of(student.getResearcherRole());
+    }
+    if (user instanceof Teacher teacher &amp;&amp; teacher.isResearcher()) {
+        return Optional.of(teacher.getResearcherRole());
+    }
+    return Optional.empty();
+}</code></pre>
+        </div>
+
+        <div class="code-card">
+            <div class="code-title">Observer notification through News</div>
+            <pre><code>public void notifyObservers() {
+    ensureObservers();
+    for (Observer observer : observers) {
+        observer.update(this);
+    }
+}
+
+public void publish() {
+    notifyObservers();
+}</code></pre>
+        </div>
+
+        <h2 id="patterns">7. OOP Principles and Design Patterns</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Principle / Pattern</th>
+                    <th>Where It Appears</th>
+                    <th>Explanation</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Encapsulation</td>
+                    <td>Most model classes</td>
+                    <td>Fields are private, while getters, setters, and defensive copies protect internal state.</td>
+                </tr>
+                <tr>
+                    <td>Inheritance</td>
+                    <td><code>User</code>, <code>Employee</code>, role classes</td>
+                    <td>Common user and employee behavior is reused by concrete roles.</td>
+                </tr>
+                <tr>
+                    <td>Polymorphism</td>
+                    <td><code>Researcher</code>, <code>Observer</code>, comparators</td>
+                    <td>Services work through interfaces and comparator contracts instead of specific implementations.</td>
+                </tr>
+                <tr>
+                    <td>Abstraction</td>
+                    <td><code>User</code>, <code>Employee</code>, interfaces</td>
+                    <td>Abstract classes and interfaces define shared behavior while hiding concrete details.</td>
+                </tr>
+                <tr>
+                    <td>Singleton</td>
+                    <td><code>Database</code></td>
+                    <td>Only one repository instance manages serialized application state.</td>
+                </tr>
+                <tr>
+                    <td>Observer</td>
+                    <td><code>News</code>, <code>Observer</code>, <code>User</code></td>
+                    <td>News items notify subscribed users through the observer interface.</td>
+                </tr>
+                <tr>
+                    <td>Factory</td>
+                    <td><code>UserFactory</code></td>
+                    <td>Creates concrete user objects from a type and attributes map.</td>
+                </tr>
+                <tr>
+                    <td>Strategy</td>
+                    <td>Comparator classes</td>
+                    <td>Different sorting strategies are implemented as separate comparator classes.</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section class="page">
+        <h2 id="management">8. Project Management Notes</h2>
+        <p>
+            Project responsibilities changed several times because two times some members had retakes, so the
+            team had to redistribute work and adjust deadlines. The final project was completed through a
+            flexible division of responsibilities and repeated review of the submitted code.
+        </p>
+
+        <h3>8.1 Team Members and Roles</h3>
+        <div class="note-box filled">
+            <ul>
+                <li><strong>Danil:</strong> handled the whole project management process, implemented about 80% of the project code, edited the final structure and diagrams, and checked the work completed by Darkhan.</li>
+                <li><strong>Darkhan:</strong> completed part A and part B, and wrote several classes and features, including <code>AuthenticationService</code> and the help feature.</li>
+                </ul>
+        </div>
+
+        <h3>8.2 Task Distribution</h3>
+        <div class="note-box filled">
+            <p>
+                At the beginning, the team shared an Excel file and instructions for UML and implementation tasks.
+                Because of retakes we've lost 2 our teammates and responsibilities changed several times. The team adapted by redistributing
+                work around the class diagram, use-case diagram, service classes, console workflow, and final report.
+            </p>
+        </div>
+
+        <h3>8.3 Risks, Issues, and Resolutions</h3>
+        <div class="note-box filled">
+            <p>
+                The main risk was changing availability of team members due to retakes, which affected the
+                planned division of UML and implementation work. As a resolution, Danil had to participate more
+                actively in UML editing and final checking, while Darkhan had to handle all UML diagrams for
+                parts A and B and keep them aligned with the implemented classes.
+            </p>
+        </div>
+    </section>
+
+    <section class="page">
+        <h2 id="screenshots">9. Screenshots</h2>
+        <p class="muted">Screenshots and visual notes from team coordination, defense planning, and console workflow.</p>
+
+        <h3>9.1 Task Distribution Discussion</h3>
+        <div class="screenshot-box">
+            <img src="report-assets/tasks.png" alt="Task distribution chat screenshot">
+            <p>
+                First coordination screenshot: team members shared the UML instruction file and discussed who
+                would work on the use-case and class diagrams.
+            </p>
+        </div>
+
+        <h3>9.2 First Defense Insights and Decision Change</h3>
+        <div class="screenshot-box">
+            <img src="report-assets/inside.png" alt="First defense notes screenshot">
+            <p>
+                Second screenshot: notes from the first defense, where the team reviewed the object model and
+                changed several design decisions.
+            </p>
+        </div>
+
+        <h3>9.3 Program Workflow</h3>
+        <div class="screenshot-box">
+            <img src="report-assets/workflow.png" alt="Program workflow console screenshot">
+            <p>
+                Third screenshot: console workflow after logging in as a teacher and opening the help menu,
+                showing available teacher commands for courses, research papers, students, transcripts,
+                supervisors, and requests.
+            </p>
+        </div>
+    </section>
+
+    <section class="page">
+        <h2 id="conclusion">10. Conclusion</h2>
+        <p>
+            The University Management System demonstrates the practical use of object-oriented programming in
+            Java. It separates domain models, services, repositories, enums, exceptions, and comparators into a
+            maintainable package structure. The project applies inheritance for user roles, interfaces for
+            research and notification behavior, custom exceptions for domain constraints, and a singleton
+            repository for persistence.
+        </p>
+        <p>
+            The system can be extended with a graphical interface, database-backed persistence, stronger
+            password hashing, role-based authorization, automated tests, and additional reporting features.
+            The current implementation already provides a clear foundation for academic workflows, staff
+            operations, research management, and system documentation.
+        </p>
+        <div class="footer-note">End of OOP Project Report</div>
+    </section>
+</body>
+</html>

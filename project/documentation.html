@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java University System Documentation</title>
+    <style>
+        :root {
+            color-scheme: light;
+            --ink: #172033;
+            --muted: #5f6f89;
+            --line: #d8e0ea;
+            --panel: #ffffff;
+            --soft: #f4f7fb;
+            --brand: #155e75;
+            --brand-strong: #0f3f54;
+            --accent: #b45309;
+            --green: #047857;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            color: var(--ink);
+            background: var(--soft);
+            line-height: 1.6;
+        }
+
+        header {
+            background: #0f3f54;
+            color: #ffffff;
+            padding: 56px 7vw 46px;
+        }
+
+        header p {
+            max-width: 860px;
+            margin: 14px 0 0;
+            color: #d7edf5;
+            font-size: 1.06rem;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: clamp(2.1rem, 4vw, 4rem);
+            line-height: 1.05;
+            letter-spacing: 0;
+        }
+
+        h2,
+        h3 {
+            line-height: 1.2;
+            letter-spacing: 0;
+        }
+
+        h2 {
+            margin: 0 0 18px;
+            font-size: 1.65rem;
+        }
+
+        h3 {
+            margin: 0;
+            font-size: 1.15rem;
+        }
+
+        main {
+            width: min(1180px, calc(100% - 36px));
+            margin: 0 auto;
+            padding: 34px 0 56px;
+        }
+
+        .meta-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 14px;
+            margin-top: -62px;
+            margin-bottom: 34px;
+        }
+
+        .meta-item,
+        .section,
+        .class-card {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            box-shadow: 0 12px 34px rgba(21, 32, 51, 0.07);
+        }
+
+        .meta-item {
+            padding: 18px;
+            border-radius: 8px;
+        }
+
+        .meta-label {
+            display: block;
+            color: var(--muted);
+            font-size: 0.77rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .meta-value {
+            display: block;
+            margin-top: 6px;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .section {
+            border-radius: 8px;
+            padding: 28px;
+            margin-bottom: 24px;
+        }
+
+        .overview {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 26px;
+            align-items: start;
+        }
+
+        .pill-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 18px;
+        }
+
+        .pill {
+            border: 1px solid #b6c7d6;
+            border-radius: 999px;
+            color: var(--brand-strong);
+            background: #eef7fa;
+            padding: 6px 10px;
+            font-size: 0.86rem;
+            font-weight: 650;
+        }
+
+        .architecture-list {
+            display: grid;
+            gap: 12px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .architecture-list li {
+            border-left: 4px solid var(--brand);
+            background: #f8fbfd;
+            padding: 12px 14px;
+        }
+
+        .class-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .class-card {
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .class-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: flex-start;
+            padding: 18px 20px;
+            background: #f8fbfd;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .package {
+            margin-top: 5px;
+            color: var(--muted);
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 0.86rem;
+        }
+
+        .tag {
+            flex: 0 0 auto;
+            border-radius: 999px;
+            padding: 5px 9px;
+            color: #ffffff;
+            background: var(--brand);
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .tag.abstract {
+            background: var(--accent);
+        }
+
+        .tag.service {
+            background: #475569;
+        }
+
+        .tag.repository {
+            background: var(--green);
+        }
+
+        .class-body {
+            padding: 18px 20px 20px;
+        }
+
+        .class-body p {
+            margin: 0 0 14px;
+        }
+
+        .doc-block {
+            border-top: 1px solid var(--line);
+            padding-top: 13px;
+            margin-top: 13px;
+        }
+
+        .doc-block h4 {
+            margin: 0 0 7px;
+            color: var(--brand-strong);
+            font-size: 0.86rem;
+            font-weight: 800;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .doc-block ul {
+            margin: 0;
+            padding-left: 18px;
+        }
+
+        .doc-block li {
+            margin-bottom: 5px;
+        }
+
+        .summary-line {
+            color: var(--brand-strong);
+            font-weight: 750;
+        }
+
+        code {
+            font-family: Consolas, "Courier New", monospace;
+            color: #7c2d12;
+            background: #fff7ed;
+            border: 1px solid #fed7aa;
+            border-radius: 5px;
+            padding: 1px 5px;
+            white-space: normal;
+        }
+
+        pre {
+            margin: 0;
+            overflow-x: auto;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            background: #111827;
+            color: #e5edf7;
+            padding: 13px 14px;
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 0.84rem;
+            line-height: 1.55;
+        }
+
+        .relationship {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .relationship article {
+            background: #f8fbfd;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .relationship h3 {
+            margin-bottom: 8px;
+            color: var(--brand-strong);
+        }
+
+        footer {
+            color: var(--muted);
+            text-align: center;
+            padding: 0 18px 34px;
+            font-size: 0.92rem;
+        }
+
+        @media (max-width: 920px) {
+            .meta-grid,
+            .overview,
+            .class-grid,
+            .relationship {
+                grid-template-columns: 1fr;
+            }
+
+            .meta-grid {
+                margin-top: -38px;
+            }
+        }
+
+        @media (max-width: 560px) {
+            header {
+                padding: 38px 22px 54px;
+            }
+
+            main {
+                width: min(100% - 24px, 1180px);
+            }
+
+            .section,
+            .class-body,
+            .class-head {
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+
+            .class-head {
+                display: block;
+            }
+
+            .tag {
+                display: inline-block;
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Java University System Documentation</h1>
+        <p>
+            Professional overview of the ten most important classes in this project, covering the user model,
+            academic workflow, persistence layer, authentication, and research management features.
+        </p>
+    </header>
+
+    <main>
+        <section class="meta-grid" aria-label="Project summary">
+            <div class="meta-item">
+                <span class="meta-label">Project Type</span>
+                <span class="meta-value">University System</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Language</span>
+                <span class="meta-value">Java</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Architecture</span>
+                <span class="meta-value">Model-Service-Repository</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Core Classes</span>
+                <span class="meta-value">10 documented</span>
+            </div>
+        </section>
+
+        <section class="section overview">
+            <div>
+                <h2>System Overview</h2>
+                <p>
+                    The project models a university information system with students, employees, courses,
+                    grading, news notifications, employee requests, authentication, and research activity.
+                    Most domain behavior is placed in model classes, while service classes coordinate
+                    authentication and research queries. Persistent in-memory collections are centralized in
+                    a singleton database repository.
+                </p>
+                <div class="pill-row" aria-label="Main capabilities">
+                    <span class="pill">User management</span>
+                    <span class="pill">Course registration</span>
+                    <span class="pill">Teacher grading</span>
+                    <span class="pill">Reports</span>
+                    <span class="pill">Research papers</span>
+                    <span class="pill">Serialization</span>
+                </div>
+            </div>
+            <ul class="architecture-list">
+                <li><strong>Model layer:</strong> contains business entities such as <code>User</code>, <code>Student</code>, <code>Teacher</code>, <code>Course</code>, and <code>ResearchPaper</code>.</li>
+                <li><strong>Service layer:</strong> provides application operations through <code>AuthenticationService</code>, <code>ResearchService</code>, comparators, and factories.</li>
+                <li><strong>Repository layer:</strong> stores users, courses, projects, news, and requests through the singleton <code>Database</code>.</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>Top 10 Classes</h2>
+            <div class="class-grid">
+                <article class="class-card">
+                    <div class="class-head">
+                        <div>
+                            <h3>User</h3>
+                            <div class="package">project/model/User.java</div>
+                        </div>
+                        <span class="tag abstract">Abstract model</span>
+                    </div>
+                    <div class="class-body">
+                        <p class="summary-line">Base abstraction for every person who can use the university system.</p>
+                        <div class="doc-block">
+                            <h4>Detailed Description</h4>
+                            <p><code>User</code> centralizes identity, contact data, school membership, login/logout behavior, and notification handling. It implements <code>Observer</code>, so all users can receive updates when a <code>News</code> item is published.</p>
+                        </div>
+                        <div class="doc-block">
+                            <h4>Attributes / Properties</h4>
+                            <ul>
+                                <li><code>String id</code>: unique user identifier.</li>
+                                <li><code>String passwordHash</code>: stored password hash used by authentication.</li>
+                                <li><code>String firstName</code>, <code>String lastName</code>, <code>String email</code>: personal profile fields.</li>
+                                <li><code>School school</code>: user's school, defaulting to <code>School.GENERAL</code>.</li>
+                                <li><code>List&lt;String&gt; notifications</code>: private notification messages received from news updates.</li>
+                            </ul>
+                        </div>
+                        <div class="doc-block">
+                            <h4>Initialization / Constructor</h4>
+                            <p>Protected constructor: <code>User(String id, String passwordHash, String firstName, String lastName, String email)</code>. It is called by subclasses such as <code>Student</code> and <code>Employee</code>.</p>
+                        </div>
+                        <div class="doc-block">
+                            <h4>Methods / Brief Overview</h4>
+                            <p><code>login()</code> and <code>logout()</code> print session messages, <code>update(News)</code> stores news notifications, and <code>getFullName()</code> combines first and last name.</p>
+                        </div>
+                        <div class="doc-block">
+                            <h4>Usage Example</h4>
+                            <pre><code>Student student = new Student("S001", "hash123", "Aruzhan", "Kim",
+        "aruzhan@uni.kz", "Computer Science", 2, 0, 3.6);
+student.setSchool(School.SITE);
+System.out.println(student.getFullName());</code></pre>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="class-card">
+                    <div class="class-head">
+                        <div>
+                            <h3>Employee</h3>
+                            <div class="package">project/model/Employee.java</div>
+                        </div>
+                        <span class="tag abstract">Abstract model</span>
+                    </div>
+                    <div class="class-body">
+                        <p class="summary-line">Shared base class for all university staff members.</p>
+                        <div class="doc-block">
+                            <h4>Detailed Description</h4>
+                            <p><code>Employee</code> extends <code>User</code> with employment data and staff-only workflows. It supports direct messaging between employees and creates employee requests that are automatically registered in the singleton <code>Database</code>.</p>
+                        </div>
+                        <div class="doc-block">
+                            <h4>Attributes / Properties</h4>
+                            <ul>
+                                <li><code>double salary</code>: employee salary value.</li>
+                                <li><code>LocalDate hireDate</code>: date when the employee was hired.</li>
+                                <li><code>List&lt;Message&gt; messages</code>: private inbox and sent-message history.</li>
+                            </ul>
+                        </div>
+                        <div class="doc-block">
+                            <h4>Initialization / Constructor</h4>
+                            <p>Protected constructor: <code>Employee(String id, String passwordHash, String firstName, String lastName, String email, double salary, LocalDate hireDate)</code>. Concrete subclasses provide public constructors.</p>
+                        </div>
+                        <div class="doc-block">
+                            <h4>Methods / Brief Overview</h4>
+                            <p><code>sendMessage(...)</code> sends and stores staff messages, <code>createRequest(String)</code> creates a formal request, and getters/setters expose salary and hire date.</p>
+                        </div>
+                        <div class="doc-block">
+                            <h4>Usage Example</h4>
+                            <pre><code>Manager manager = new Manager("M001", "hash", "Dana", "Omar",
+        "dana@uni.kz", 550000, LocalDate.now(), ManagerType.OR);
+EmployeeRequest request = manager.createRequest("Need approval for event budget.");</code></pre>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="class-card">
+                    <div class="class-head">
+                        <div>
+                            <h3>Student</h3>
+                            <div class="package">project/model/Student.java</div>
+                        </div>
+                        <span class="tag">Model</span>
+                    </div>
+                    <div class="class-body">
+                        <p class="summary-line">Represents a student and controls course registration, marks, GPA, and research status.</p>
+                        <div class="doc-block">
+                            <h4>Detailed Description</h4>
+                            <p><code>Student</code> contains most of the academic learner workflow. It validates registration against course major/year rules and a 21-credit limit, tracks pending and approved courses, recalculates GPA from transcript marks, and can become a researcher through a delegated <code>DefaultResearcher</code> role.</p>
+                        </div>
+                        <div class="doc-block">
+                            <h4>Attributes / Properties</h4>
+                            <ul>
+                                <li><code>String major</code>, <code>int year</code>, <code>DegreeLevel degreeLevel</code>: academic profile.</li>
+                                <li><code>int credits</code>, <code>double gpa</code>: academic progress metrics.</li>
+                                <li><code>Transcript transcript</code>: course-to-mark record storage.</li>
+                                <li><code>Researcher researcherRole</code>, <code>Researcher supervisor</code>: optional research participation fields.</li>
+                                <li><code>List&lt;Course&gt; registeredCourses</code>, <code>pendingCourses</code>: enrollment state.</li>
+                            </ul>
+                        </div>
+                        <div class="doc-block">
+                            <h4>Initialization / Constructor</h4>
+                            <p><code>Student(String id, String passwordHash, String firstName, String lastName, String email, String major, int year, int credits, double gpa)</code>. The degree level defaults to <code>BACHELOR</code>, and a new <code>Transcript</code> is created automatically.</p>
+                        </div>
+                        <div class="doc-block">
+                            <h4>Methods / Brief Overview</h4>
+                            <p>Registration is handled by <code>registerForCourse</code> and <code>approveCourseRegistration</code>. Academic records use <code>viewTranscript</code>, <code>viewMarks</code>, and <code>updateMark</code>. Research status uses <code>becomeResearcher</code> and <code>assignSupervisor</code>.</p>
+                        </div>
+                        <div class="doc-block">
+                            <h4>Usage Example</h4>
+                            <pre><code>Student student = new Student("S002", "hash", "Ali", "Nurseit",
+        "ali@uni.kz", "Software Engineering", 1, 0, 0.0);
+Course oop = new Course("CS101", "Object-Oriented Programming", 5,
+        "Software Engineering", 1);
+student.registerForCourse(oop);</code></pre>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="class-card">
+                    <div class="class-head">
+                        <div>
+                            <h3>Teacher</h3>
+                            <div class="package">project/model/Teacher.java</div>
+                        </div>
+                        <span class="tag">Model</span>
+                    </div>
+                    <div class="class-body">
+                        <p class="summary-line">Represents teaching staff who manage courses, grading, ratings, and complaints.</p>
+                        <div class="doc-block">
+                            <h4>Detailed Description</h4>
+                            <p><code>Teacher</code> extends employee behavior with teaching responsibilities. It verifies that a teacher is assigned to a course before viewing students or putting marks. Professors automatically receive a researcher role.</p>
+                        </div>
+                        <div class="doc-block">
+                            <h4>Attributes / Properties</h4>
+                            <ul>
+                                <li><code>TeacherTitle title</code>: teacher rank such as tutor, lecturer, or professor.</li>
+                                <li><code>List&lt;Course&gt; courses</code>: courses assigned to the teacher.</li>
+                                <li><code>Researcher researcherRole</code>: optional research behavior.</li>
+                                <li><code>Map&lt;Student, Integer&gt; ratings</code>: student ratings used for average rating.</li>
+                            </ul>
+                        </div>
+                        <div class="doc-block">
+                            <h4>Initialization / Constructor</h4>
+                            <p><code>Teacher(String id, String passwordHash, String firstName, String lastName, String email, double salary, LocalDate hireDate, TeacherTitle title)</code>. If <code>title</code> is <code>PROFESSOR</code>, the teacher becomes a researcher automatically.</p>
+                        </div>
+                        <div class="doc-block">
+                            <h4>Methods / Brief Overview</h4>
+                            <p><code>putMark</code> calculates and writes grades, <code>viewStudents</code> returns enrolled students, <code>sendComplaint</code> sends a message to a manager, and <code>getAverageRating</code> summarizes ratings.</p>
+                        </div>
+                        <div class="doc-block">
+                            <h4>Usage Example</h4>
+                            <pre><code>Teacher teacher = new Teacher("T001", "hash", "Mira", "Saken",
+        "mira@uni.kz", 480000, LocalDate.now(), TeacherTitle.LECTOR);
+teacher.addCourse(oop);
+teacher.putMark(student, oop, new Mark(27, 25, 36));</code></pre>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="class-card">
+                    <div class="class-head">
+                        <div>
+                            <h3>Manager</h3>
+                            <div class="package">project/model/Manager.java</div>
+                        </div>
+                        <span class="tag">Model</span>
+                    </div>
+                    <div class="class-body">
+                        <p class="summary-line">Coordinates academic administration tasks for courses, reports, requests, and news.</p>
+                        <div class="doc-block">
+                            <h4>Detailed Description</h4>
+                            <p><code>Manager</code> is the main administrative role for academic operations. It uses the singleton <code>Database</code> to publish courses, gather report data, retrieve signed employee requests, and send news updates to all users.</p>
+                        </div>
+                        <div class="doc-block">
+                            <h4>Attributes / Properties</h4>
+                            <ul>
+                                <li><code>ManagerType type</code>: manager category, such as OR or department manager.</li>
+                                <li>Inherited employee fields: salary, hire date, and messages.</li>
+                            </ul>
+                        </div>
+                        <div class="doc-block">
+                            <h4>Initialization / Constructor</h4>
+                            <p><code>Manager(String id, String passwordHash, String firstName, String lastName, String email, double salary, LocalDate hireDate, ManagerType type)</code>.</p>
+                        </div>
+                        <div class="doc-block">
+                            <h4>Methods / Brief Overview</h4>
+                            <p><code>approveRegistration</code> moves pending courses into a student's registered list, <code>assignCourse</code> links teacher and course, <code>createReport</code> summarizes system statistics, and <code>manageNews</code> publishes announcements.</p>
+                        </div>
+                        <div class="doc-block">
+                            <h4>Usage Example</h4>
+                            <pre><code>Manager manager = new Manager("M002", "hash", "Aida", "Serik",
+        "aida@uni.kz", 600000, LocalDate.now(), ManagerType.DEPARTMENT);
+manager.addCourseForRegistration(oop, "Software Engineering", 1);
+manager.approveRegistration(student);</code></pre>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="class-card">
+                    <div class="class-head">
+                        <div>
+                            <h3>Admin</h3>
+                            <div class="package">project/model/Admin.java</div>
+                        </div>
+                        <span class="tag">Model</span>
+                    </div>
+                    <div class="class-body">
+                        <p class="summary-line">Maintains user accounts and records administrative actions.</p>
+                        <div class="doc-block">
+                            <h4>Detailed Description</h4>
+                            <p><code>Admin</code> is responsible for account-level operations. It delegates storage changes to <code>Database</code> and keeps a local log showing which users were added, removed, or updated.</p>
+                        </div>
+                        <div class="doc-block">
+                            <h4>Attributes / Properties</h4>
+                            <ul>
+                                <li><code>List&lt;String&gt; logs</code>: private action history for admin operations.</li>
+                                <li>Inherited employee fields: identity, salary, hire date, and messages.</li>
+                            </ul>
+                        </div>
+                        <div class="doc-block">
+                            <h4>Initialization / Constructor</h4>
+                            <p><code>Admin(String id, String passwordHash, String firstName, String lastName, String email, double salary, LocalDate hireDate)</code>.</p>
+                        </div>
+                        <div class="doc-block">
+                            <h4>Methods / Brief Overview</h4>
+                            <p><code>addUser</code>, <code>removeUser</code>, and <code>updateUser</code> modify database records. <code>viewLogs</code> returns a defensive copy of the admin log.</p>
+                        </div>
+                        <div class="doc-block">
+                            <h4>Usage Example</h4>
+                            <pre><code>Admin admin = new Admin("A001", "hash", "Nurlan", "Bek",
+        "admin@uni.kz", 650000, LocalDate.now());
+admin.addUser(student);
+System.out.println(admin.viewLogs());</code></pre>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="class-card">
+                    <div class="class-head">
+                        <div>
+                            <h3>Course</h3>
+                            <div class="package">project/model/Course.java</div>
+                        </div>
+                        <span class="tag">Model</span>
+                    </div>
+                    <div class="class-body">
+                        <p class="summary-line">Defines a university course and the people and lessons attached to it.</p>
+                        <div class="doc-block">
+                            <h4>Detailed Description</h4>
+                            <p><code>Course</code> stores academic course metadata and relationships. Its availability rule checks optional intended major and intended year values before allowing a student registration request.</p>
+                        </div>
+                        <div class="doc-block">
+                            <h4>Attributes / Properties</h4>
+                            <ul>
+                                <li><code>String code</code>, <code>String name</code>: course identity and title.</li>
+                                <li><code>int credits</code>: credit value used in student credit-limit checks.</li>
+                                <li><code>String intendedMajor</code>, <code>Integer intendedYear</code>: optional registration restrictions.</li>
+                                <li><code>List&lt;Teacher&gt; instructors</code>, <code>List&lt;Student&gt; students</code>, <code>List&lt;Lesson&gt; lessons</code>: course relationships.</li>
+                            </ul>
+                        </div>
+                        <div class="doc-block">
+                            <h4>Initialization / Constructor</h4>
+                            <p>Use <code>Course(String code, String name, int credits)</code> for a general course, or <code>Course(String code, String name, int credits, String intendedMajor, Integer intendedYear)</code> to restrict registration.</p>
+                        </div>
+                        <div class="doc-block">
+                            <h4>Methods / Brief Overview</h4>
+                            <p><code>addInstructor</code>, <code>addStudent</code>, and <code>addLesson</code> attach related objects. <code>isAvailableFor(Student)</code> validates registration eligibility.</p>
+                        </div>
+                        <div class="doc-block">
+                            <h4>Usage Example</h4>
+                            <pre><code>Course algorithms = new Course("CS205", "Algorithms", 5,
+        "Computer Science", 2);
+algorithms.addInstructor(teacher);
+boolean allowed = algorithms.isAvailableFor(student);</code></pre>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="class-card">
+                    <div class="class-head">
+                        <div>
+                            <h3>Database</h3>
+                            <div class="package">project/repository/Database.java</div>
+                        </div>
+                        <span class="tag repository">Repository</span>
+                    </div>
+                    <div class="class-body">
+                        <p class="summary-line">Singleton repository that stores and serializes all main application data.</p>
+                        <div class="doc-block">
+                            <h4>Detailed Description</h4>
+                            <p><code>Database</code> is a final singleton repository backed by Java serialization. It loads from <code>database.ser</code> at startup when possible, returns defensive copies for collection getters, and synchronizes public operations to reduce concurrent access issues.</p>
+                        </div>
+                        <div class="doc-block">
+                            <h4>Attributes / Properties</h4>
+                            <ul>
+                                <li><code>static Database INSTANCE</code>: singleton instance loaded from disk or newly created.</li>
+                                <li><code>Map&lt;String, User&gt; users</code>: users indexed by ID.</li>
+                                <li><code>Map&lt;String, Course&gt; courses</code>: courses indexed by code.</li>
+                                <li><code>List&lt;ResearchProject&gt; researchProjects</code>, <code>List&lt;News&gt; newsFeed</code>, <code>List&lt;EmployeeRequest&gt; employeeRequests</code>: stored domain collections.</li>
+                            </ul>
+                        </div>
+                        <div class="doc-block">
+                            <h4>Initialization / Constructor</h4>
+                            <p>The constructor is private. Use <code>Database.getInstance()</code>. On first load, the class tries to deserialize <code>database.ser</code>; otherwise it creates an empty database.</p>
+                        </div>
+                        <div class="doc-block">
+                            <h4>Methods / Brief Overview</h4>
+                            <p>Provides synchronized CRUD-style operations for users and courses, plus add/get methods for research projects, news, employee requests, and <code>save()</code> for persistence.</p>
+                        </div>
+                        <div class="doc-block">
+                            <h4>Usage Example</h4>
+                            <pre><code>Database db = Database.getInstance();
+db.addUser(student);
+db.addCourse(oop);
+db.save();</code></pre>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="class-card">
+                    <div class="class-head">
+                        <div>
+                            <h3>AuthenticationService</h3>
+                            <div class="package">project/service/AuthenticationService.java</div>
+                        </div>
+                        <span class="tag service">Service</span>
+                    </div>
+                    <div class="class-body">
+                        <p class="summary-line">Validates user credentials against the database.</p>
+                        <div class="doc-block">
+                            <h4>Detailed Description</h4>
+                            <p><code>AuthenticationService</code> is a small service object that separates login checks from the model layer. It compares a provided password hash with the stored hash, calls <code>login()</code> on success, and supports both optional and exception-based authentication flows.</p>
+                        </div>
+                        <div class="doc-block">
+                            <h4>Attributes / Properties</h4>
+                            <ul>
+                                <li><code>Database database</code>: repository used to find users by ID.</li>
+                            </ul>
+                        </div>
+                        <div class="doc-block">
+                            <h4>Initialization / Constructor</h4>
+                            <p><code>AuthenticationService(Database database)</code>. The caller supplies the database instance, usually <code>Database.getInstance()</code>.</p>
+                        </div>
+                        <div class="doc-block">
+                            <h4>Methods / Brief Overview</h4>
+                            <p><code>authenticate(String, String)</code> returns <code>Optional&lt;User&gt;</code>. <code>requireAuthenticated(String, String)</code> returns a user or throws <code>SecurityException</code>.</p>
+                        </div>
+                        <div class="doc-block">
+                            <h4>Usage Example</h4>
+                            <pre><code>AuthenticationService auth = new AuthenticationService(Database.getInstance());
+User currentUser = auth.requireAuthenticated("S002", "hash");</code></pre>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="class-card">
+                    <div class="class-head">
+                        <div>
+                            <h3>ResearchService</h3>
+                            <div class="package">project/service/ResearchService.java</div>
+                        </div>
+                        <span class="tag service">Service</span>
+                    </div>
+                    <div class="class-body">
+                        <p class="summary-line">Coordinates research papers, researchers, citation searches, and research projects.</p>
+                        <div class="doc-block">
+                            <h4>Detailed Description</h4>
+                            <p><code>ResearchService</code> works across a collection of users and extracts researcher behavior from direct <code>Researcher</code> implementations or delegated roles on students and teachers. It can locate top-cited researchers globally, by school, by year, or by school and year.</p>
+                        </div>
+                        <div class="doc-block">
+                            <h4>Attributes / Properties</h4>
+                            <ul>
+                                <li>No instance fields. The service is stateless and operates on method parameters.</li>
+                                <li>Uses <code>Researcher</code>, <code>ResearchPaper</code>, <code>ResearchProject</code>, <code>User</code>, and <code>School</code> objects supplied by callers.</li>
+                            </ul>
+                        </div>
+                        <div class="doc-block">
+                            <h4>Initialization / Constructor</h4>
+                            <p>Uses the default no-argument constructor: <code>new ResearchService()</code>.</p>
+                        </div>
+                        <div class="doc-block">
+                            <h4>Methods / Brief Overview</h4>
+                            <p><code>addPaper</code> appends a publication, <code>getAllResearchers</code> extracts research roles, <code>findTopCitedResearcher...</code> methods rank researchers by citations, and <code>addResearcherToProject</code> validates project membership.</p>
+                        </div>
+                        <div class="doc-block">
+                            <h4>Usage Example</h4>
+                            <pre><code>ResearchService researchService = new ResearchService();
+student.becomeResearcher();
+researchService.addPaper(student.getResearcherRole(), paper);
+researchService.findTopCitedResearcher(Database.getInstance().getUsers())
+        .ifPresent(r -&gt; System.out.println(r.getResearcherName()));</code></pre>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>Important Relationships</h2>
+            <div class="relationship">
+                <article>
+                    <h3>User hierarchy</h3>
+                    <p>
+                        <code>User</code> is the root. <code>Student</code> extends it directly, while
+                        <code>Admin</code>, <code>Manager</code>, and <code>Teacher</code> inherit through
+                        <code>Employee</code>.
+                    </p>
+                </article>
+                <article>
+                    <h3>Academic workflow</h3>
+                    <p>
+                        <code>Student</code> requests a <code>Course</code>, <code>Manager</code> approves
+                        registration, and <code>Teacher</code> records <code>Mark</code> values into the
+                        student's transcript.
+                    </p>
+                </article>
+                <article>
+                    <h3>Research workflow</h3>
+                    <p>
+                        <code>ResearchService</code> works with the <code>Researcher</code> interface and can
+                        discover researcher roles from students, teachers, and research employees.
+                    </p>
+                </article>
+            </div>
+        </section>
+    </main>
+
+</body>
+</html>

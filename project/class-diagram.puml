@@ -1,0 +1,424 @@
+@startuml
+title University System - Class Diagram
+
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam class {
+  BackgroundColor #F8FAFC
+  BorderColor #334155
+  FontColor #0F172A
+}
+skinparam interface {
+  BackgroundColor #EEF2FF
+  BorderColor #4338CA
+}
+skinparam enum {
+  BackgroundColor #ECFDF5
+  BorderColor #047857
+}
+skinparam ArrowColor #475569
+skinparam linetype ortho
+left to right direction
+hide empty members
+
+package "enums" {
+  enum DegreeLevel {
+    BACHELOR
+    MASTER
+    PHD
+  }
+
+  enum LessonType {
+    LECTURE
+    PRACTICE
+  }
+
+  enum ManagerType {
+    OR
+    DEPARTMENT
+  }
+
+  enum RequestStatus {
+    DRAFT
+    SIGNED_BY_DEAN
+    SIGNED_BY_RECTOR
+    APPROVED
+    REJECTED
+  }
+
+  enum School {
+    GENERAL
+    SITE
+    BS
+    ISE
+    SCE
+  }
+
+  enum TeacherTitle {
+    TUTOR
+    LECTOR
+    SENIOR_LECTOR
+    PROFESSOR
+  }
+}
+
+package "model" {
+  interface Observer {
+    +update(news: News): void
+  }
+
+  interface Researcher {
+    +getPapers(): List<ResearchPaper>
+    +getProjects(): List<ResearchProject>
+    +addPaper(paper: ResearchPaper): void
+    +printPapers(comparator: Comparator<ResearchPaper>): void
+    +calculateHIndex(): int
+    +joinProject(project: ResearchProject): void
+    +getResearcherName(): String
+  }
+
+  abstract class User {
+    -id: String
+    -passwordHash: String
+    -firstName: String
+    -lastName: String
+    -email: String
+    -school: School
+    -notifications: List<String>
+    +login(): void
+    +logout(): void
+    +update(news: News): void
+    +getFullName(): String
+  }
+
+  abstract class Employee {
+    -salary: double
+    -hireDate: LocalDate
+    -messages: List<Message>
+    +sendMessage(receiver: Employee, message: Message): void
+    +createRequest(content: String): EmployeeRequest
+    #receiveMessage(message: Message): void
+  }
+
+  class Admin {
+    -logs: List<String>
+    +addUser(user: User): void
+    +removeUser(user: User): void
+    +updateUser(user: User): void
+    +viewLogs(): List<String>
+  }
+
+  class Manager {
+    -type: ManagerType
+    +approveRegistration(student: Student): void
+    +assignCourse(teacher: Teacher, course: Course): void
+    +addCourseForRegistration(course: Course, intendedMajor: String, intendedYear: Integer): void
+    +createReport(): Report
+    +viewStudentsSorted(comparator: Comparator<Student>): List<Student>
+    +viewTeachersSorted(comparator: Comparator<Teacher>): List<Teacher>
+    +viewSignedEmployeeRequests(): List<EmployeeRequest>
+    +manageNews(news: News): void
+  }
+
+  class Teacher {
+    -title: TeacherTitle
+    -courses: List<Course>
+    -researcherRole: Researcher
+    -ratings: Map<Student, Integer>
+    +putMark(student: Student, course: Course, mark: Mark): void
+    +viewStudents(course: Course): List<Student>
+    +sendComplaint(manager: Manager, complaint: String): void
+    +becomeResearcher(): void
+    +isResearcher(): boolean
+    +addCourse(course: Course): void
+    +acceptRating(student: Student, rating: int): void
+    +getAverageRating(): double
+  }
+
+  class Student {
+    {static} -MAX_CREDITS: int
+    {static} -MAX_FAILED_ATTEMPTS: int
+    -major: String
+    -year: int
+    -degreeLevel: DegreeLevel
+    -credits: int
+    -gpa: double
+    -transcript: Transcript
+    -researcherRole: Researcher
+    -supervisor: Researcher
+    -registeredCourses: List<Course>
+    -pendingCourses: List<Course>
+    -failedAttempts: Map<Course, Integer>
+    +registerForCourse(course: Course): void
+    +approveCourseRegistration(course: Course): void
+    +viewMarks(): List<Mark>
+    +viewTranscript(): Transcript
+    +rateTeacher(teacher: Teacher, rating: int): void
+    +becomeResearcher(): void
+    +isResearcher(): boolean
+    +assignSupervisor(supervisor: Researcher): void
+    +updateMark(course: Course, mark: Mark): void
+    +compareTo(other: Student): int
+  }
+
+  class ResearchEmployee {
+    -researcherRole: DefaultResearcher
+  }
+
+  class DefaultResearcher {
+    -owner: User
+    -papers: List<ResearchPaper>
+    -projects: List<ResearchProject>
+    +addPaper(paper: ResearchPaper): void
+    +printPapers(comparator: Comparator<ResearchPaper>): void
+    +calculateHIndex(): int
+    +joinProject(project: ResearchProject): void
+    +getResearcherName(): String
+  }
+
+  class Course {
+    -code: String
+    -name: String
+    -credits: int
+    -intendedMajor: String
+    -intendedYear: Integer
+    -instructors: List<Teacher>
+    -students: List<Student>
+    -lessons: List<Lesson>
+    +addInstructor(teacher: Teacher): void
+    +addStudent(student: Student): void
+    +addLesson(lesson: Lesson): void
+    +isAvailableFor(student: Student): boolean
+  }
+
+  class Lesson {
+    -type: LessonType
+  }
+
+  class Transcript {
+    -records: Map<Course, Mark>
+    +addCourse(course: Course): void
+    +updateRecord(course: Course, mark: Mark): void
+    +getMark(course: Course): Mark
+  }
+
+  class Mark {
+    -attestation1: double
+    -attestation2: double
+    -finalExam: double
+    -total: double
+    +calculateTotal(): void
+    +isFailed(): boolean
+  }
+
+  class Message {
+    -sender: Employee
+    -receiver: Employee
+    -content: String
+    -timestamp: LocalDateTime
+  }
+
+  class EmployeeRequest {
+    -requester: Employee
+    -content: String
+    -createdAt: LocalDateTime
+    -status: RequestStatus
+    -deanSignature: String
+    -rectorSignature: String
+    +signByDean(dean: User): void
+    +signByRector(rector: User): void
+    +isFullySigned(): boolean
+  }
+
+  class News {
+    -title: String
+    -content: String
+    -date: LocalDate
+    -observers: List<Observer>
+    +subscribe(observer: Observer): void
+    +unsubscribe(observer: Observer): void
+    +notifyObservers(): void
+    +publish(): void
+  }
+
+  class Report {
+    -content: String
+  }
+
+  class ResearchPaper {
+    -title: String
+    -authors: List<String>
+    -journal: String
+    -citations: int
+    -pages: int
+    -doi: String
+    -publishDate: LocalDate
+    +compareTo(other: ResearchPaper): int
+  }
+
+  class ResearchProject {
+    -topic: String
+    -papers: List<ResearchPaper>
+    -participants: List<Researcher>
+    +addPaper(paper: ResearchPaper): void
+    +addParticipant(user: User): void
+  }
+}
+
+package "repository" {
+  class Database <<singleton>> {
+    {static} -FILE_NAME: String
+    {static} -INSTANCE: Database
+    -users: Map<String, User>
+    -courses: Map<String, Course>
+    -researchProjects: List<ResearchProject>
+    -newsFeed: List<News>
+    -employeeRequests: List<EmployeeRequest>
+    {static} +getInstance(): Database
+    +addUser(user: User): void
+    +removeUser(userId: String): void
+    +updateUser(user: User): void
+    +getUsers(): List<User>
+    +addCourse(course: Course): void
+    +getCourses(): List<Course>
+    +addResearchProject(project: ResearchProject): void
+    +addNews(news: News): void
+    +addEmployeeRequest(request: EmployeeRequest): void
+    +save(): void
+  }
+}
+
+package "service" {
+  class AuthenticationService {
+    -database: Database
+    +authenticate(userId: String, passwordHash: String): Optional<User>
+    +requireAuthenticated(userId: String, passwordHash: String): User
+  }
+
+  class ResearchService {
+    +addPaper(researcher: Researcher, paper: ResearchPaper): void
+    +printAllResearchersPapers(users: Collection<User>, comparator: Comparator<ResearchPaper>): void
+    +findTopCitedResearcher(users: Collection<User>): Optional<Researcher>
+    +findTopCitedResearcherBySchool(users: Collection<User>, school: School): Optional<Researcher>
+    +findTopCitedResearcherOfYear(users: Collection<User>, year: int): Optional<Researcher>
+    +addResearcherToProject(project: ResearchProject, user: User): void
+  }
+
+  class UserFactory {
+    +createUser(type: String, attributes: Map<String, Object>): User
+  }
+
+  class PaperByCitationsComparator <<Comparator>>
+  class PaperByDateComparator <<Comparator>>
+  class PaperByPagesComparator <<Comparator>>
+  class PaperByTitleComparator <<Comparator>>
+  class StudentByGpaComparator <<Comparator>>
+  class StudentByNameComparator <<Comparator>>
+  class TeacherByNameComparator <<Comparator>>
+}
+
+package "exceptions" {
+  class CreditLimitExceededException
+  class LowHIndexException
+  class NotAResearcherException
+}
+
+Observer <|.. User
+User <|-- Employee
+User <|-- Student
+Employee <|-- Admin
+Employee <|-- Manager
+Employee <|-- Teacher
+Employee <|-- ResearchEmployee
+Researcher <|.. DefaultResearcher
+Researcher <|.. ResearchEmployee
+Comparable <|.. Student
+Comparable <|.. ResearchPaper
+
+User --> School
+Student --> DegreeLevel
+Teacher --> TeacherTitle
+Manager --> ManagerType
+Lesson --> LessonType
+EmployeeRequest --> RequestStatus
+
+Employee *-- "0..*" Message : messages
+Message --> "1" Employee : sender
+Message --> "1" Employee : receiver
+Employee --> EmployeeRequest : creates
+EmployeeRequest --> "1" Employee : requester
+
+Admin ..> Database
+Manager ..> Database
+Manager ..> Report
+Manager ..> News
+Teacher "0..*" -- "0..*" Course : teaches
+Teacher "0..*" -- "0..*" Student : ratings
+Student "0..*" -- "0..*" Course : registered/pending
+Student *-- "1" Transcript
+Transcript *-- "0..*" Mark
+Transcript --> "0..*" Course
+Course *-- "0..*" Lesson
+Course --> "0..*" Teacher : instructors
+Course --> "0..*" Student : students
+
+Student *-- "0..1" Researcher : researcherRole
+Student --> "0..1" Researcher : supervisor
+Teacher *-- "0..1" Researcher : researcherRole
+ResearchEmployee *-- "1" DefaultResearcher
+DefaultResearcher --> "1" User : owner
+DefaultResearcher *-- "0..*" ResearchPaper
+DefaultResearcher -- "0..*" ResearchProject
+ResearchProject *-- "0..*" ResearchPaper
+ResearchProject -- "0..*" Researcher : participants
+
+News o-- "0..*" Observer
+News ..> User : notifications via Observer
+
+Database *-- "0..*" User
+Database *-- "0..*" Course
+Database *-- "0..*" ResearchProject
+Database *-- "0..*" News
+Database *-- "0..*" EmployeeRequest
+
+AuthenticationService --> Database
+AuthenticationService ..> User
+ResearchService ..> Researcher
+ResearchService ..> ResearchPaper
+ResearchService ..> ResearchProject
+ResearchService ..> User
+ResearchService ..> School
+UserFactory ..> User
+UserFactory ..> Student
+UserFactory ..> Teacher
+UserFactory ..> Manager
+UserFactory ..> Admin
+UserFactory ..> ResearchEmployee
+
+PaperByCitationsComparator ..|> Comparator
+PaperByDateComparator ..|> Comparator
+PaperByPagesComparator ..|> Comparator
+PaperByTitleComparator ..|> Comparator
+StudentByGpaComparator ..|> Comparator
+StudentByNameComparator ..|> Comparator
+TeacherByNameComparator ..|> Comparator
+
+PaperByCitationsComparator ..> ResearchPaper
+PaperByDateComparator ..> ResearchPaper
+PaperByPagesComparator ..> ResearchPaper
+PaperByTitleComparator ..> ResearchPaper
+StudentByGpaComparator ..> Student
+StudentByNameComparator ..> Student
+TeacherByNameComparator ..> Teacher
+
+CreditLimitExceededException --|> Exception
+LowHIndexException --|> Exception
+NotAResearcherException --|> Exception
+Student ..> CreditLimitExceededException
+Student ..> LowHIndexException
+ResearchProject ..> NotAResearcherException
+ResearchService ..> NotAResearcherException
+
+
+
+@enduml

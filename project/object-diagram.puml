@@ -1,0 +1,265 @@
+@startuml
+title University System - Object Diagram (seedData runtime snapshot)
+
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam object {
+  BackgroundColor #F8FAFC
+  BorderColor #334155
+  FontColor #0F172A
+}
+skinparam ArrowColor #475569
+skinparam linetype ortho
+left to right direction
+
+object "db : Database\n<<singleton>>" as db {
+  users = 6
+  courses = 4
+  researchProjects = 1
+  newsFeed = 0
+  employeeRequests = 0
+}
+
+package "Users" {
+  object "admin : Admin" as admin {
+    id = "A001"
+    fullName = "Alice Admin"
+    school = GENERAL
+    salary = 350000.0
+    logs = 6
+  }
+
+  object "manager : Manager" as manager {
+    id = "M001"
+    fullName = "Mark Manager"
+    school = SITE
+    type = OR
+    salary = 300000.0
+  }
+
+  object "professor : Teacher" as professor {
+    id = "T001"
+    fullName = "Nora Professor"
+    school = SITE
+    title = PROFESSOR
+    avgRating = 0.0
+  }
+
+  object "lecturer : Teacher" as lecturer {
+    id = "T002"
+    fullName = "Leo Lecturer"
+    school = SITE
+    title = LECTOR
+    avgRating = 0.0
+  }
+
+  object "seniorStudent : Student" as senior {
+    id = "S001"
+    fullName = "Sara Senior"
+    major = "Computer Science"
+    year = 4
+    credits = 9
+    gpa = 3.6
+    degreeLevel = BACHELOR
+  }
+
+  object "juniorStudent : Student" as junior {
+    id = "S002"
+    fullName = "Jules Junior"
+    major = "Data Science"
+    year = 3
+    credits = 5
+    gpa = 3.12
+    degreeLevel = BACHELOR
+  }
+}
+
+package "Courses" {
+  object "oop : Course" as oop {
+    code = "CS301"
+    name = "Advanced OOP"
+    credits = 5
+    lessons = 2
+  }
+
+  object "researchMethods : Course" as researchMethods {
+    code = "CS410"
+    name = "Research Methods"
+    credits = 4
+  }
+
+  object "distributedSystems : Course" as distributedSystems {
+    code = "CS420"
+    name = "Distributed Systems"
+    credits = 6
+  }
+
+  object "machineLearning : Course" as machineLearning {
+    code = "CS430"
+    name = "Machine Learning"
+    credits = 7
+  }
+
+  object "lecture : Lesson" as lecture {
+    type = LECTURE
+  }
+
+  object "practice : Lesson" as practice {
+    type = PRACTICE
+  }
+}
+
+package "Academic Records" {
+  object "seniorTranscript : Transcript" as seniorTranscript {
+    records = 2
+  }
+
+  object "juniorTranscript : Transcript" as juniorTranscript {
+    records = 1
+  }
+
+  object "seniorOopMark : Mark" as seniorOopMark {
+    attestation1 = 27
+    attestation2 = 28
+    finalExam = 35
+    total = 90
+  }
+
+  object "juniorOopMark : Mark" as juniorOopMark {
+    attestation1 = 23
+    attestation2 = 24
+    finalExam = 31
+    total = 78
+  }
+
+  object "seniorResearchMethodsMark : Mark" as seniorResearchMark {
+    attestation1 = 0
+    attestation2 = 0
+    finalExam = 0
+    total = 0
+  }
+}
+
+package "Research" {
+  object "professorResearcher : DefaultResearcher" as professorResearcher {
+    owner = "Nora Professor"
+    papers = 3
+    projects = 1
+    hIndex = 3
+  }
+
+  object "lecturerResearcher : DefaultResearcher" as lecturerResearcher {
+    owner = "Leo Lecturer"
+    papers = 1
+    projects = 0
+    hIndex = 1
+  }
+
+  object "studentResearcher : DefaultResearcher" as studentResearcher {
+    owner = "Sara Senior"
+    papers = 1
+    projects = 1
+    hIndex = 1
+  }
+
+  object "professorPaper1 : ResearchPaper" as professorPaper1 {
+    title = "Scalable Knowledge Graphs"
+    citations = 12
+    pages = 18
+    doi = "10.1000/kg-001"
+    publishDate = 2021-05-12
+  }
+
+  object "professorPaper2 : ResearchPaper" as professorPaper2 {
+    title = "Adaptive Query Scheduling"
+    citations = 9
+    pages = 15
+    doi = "10.1000/aqs-002"
+    publishDate = 2022-07-05
+  }
+
+  object "professorPaper3 : ResearchPaper" as professorPaper3 {
+    title = "Edge-Aware Research Platforms"
+    citations = 7
+    pages = 20
+    doi = "10.1000/earp-003"
+    publishDate = 2023-10-10
+  }
+
+  object "lecturerPaper : ResearchPaper" as lecturerPaper {
+    title = "Introductory Methods for Classroom Analytics"
+    citations = 1
+    pages = 12
+    doi = "10.1000/ti-004"
+    publishDate = 2024-02-02
+  }
+
+  object "studentPaper : ResearchPaper" as studentPaper {
+    title = "Student-Centric Research Tracking"
+    authors = "Sara Senior, Nora Professor"
+    citations = 3
+    pages = 10
+    doi = "10.1000/srt-005"
+    publishDate = 2024-11-01
+  }
+
+  object "researchProject : ResearchProject" as researchProject {
+    topic = "AI for Research Administration"
+    papers = 1
+    participants = 2
+  }
+}
+
+db *-- admin : users["A001"]
+db *-- manager : users["M001"]
+db *-- professor : users["T001"]
+db *-- lecturer : users["T002"]
+db *-- senior : users["S001"]
+db *-- junior : users["S002"]
+
+db *-- oop : courses["CS301"]
+db *-- researchMethods : courses["CS410"]
+db *-- distributedSystems : courses["CS420"]
+db *-- machineLearning : courses["CS430"]
+db *-- researchProject : researchProjects[0]
+
+admin ..> db : addUser()
+manager ..> db : addCourseForRegistration()\nmanageNews()
+manager --> professor : assignCourse()
+manager --> lecturer : assignCourse()
+
+professor -- oop : teaches
+lecturer -- oop : teaches
+professor -- researchMethods : teaches
+lecturer -- distributedSystems : teaches
+
+oop -- senior : registered student
+oop -- junior : registered student
+researchMethods -- senior : registered student
+oop *-- lecture : lessons[0]
+oop *-- practice : lessons[1]
+
+senior *-- seniorTranscript : transcript
+junior *-- juniorTranscript : transcript
+seniorTranscript *-- seniorOopMark : records[CS301]
+seniorTranscript *-- seniorResearchMark : records[CS410]
+juniorTranscript *-- juniorOopMark : records[CS301]
+
+professor *-- professorResearcher : researcherRole
+lecturer *-- lecturerResearcher : researcherRole
+senior *-- studentResearcher : researcherRole
+
+professorResearcher *-- professorPaper1 : papers[0]
+professorResearcher *-- professorPaper2 : papers[1]
+professorResearcher *-- professorPaper3 : papers[2]
+lecturerResearcher *-- lecturerPaper : papers[0]
+studentResearcher *-- studentPaper : papers[0]
+
+researchProject *-- studentPaper : papers[0]
+researchProject -- professorResearcher : participant
+researchProject -- studentResearcher : participant
+professorResearcher -- researchProject : projects[0]
+studentResearcher -- researchProject : projects[0]
+
+
+@enduml

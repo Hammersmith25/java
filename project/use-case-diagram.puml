@@ -1,0 +1,172 @@
+@startuml
+title University System - Use Case Diagram
+
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam actor {
+  BackgroundColor #F8FAFC
+  BorderColor #334155
+  FontColor #0F172A
+}
+skinparam usecase {
+  BackgroundColor #F8FAFC
+  BorderColor #334155
+  FontColor #0F172A
+}
+skinparam rectangle {
+  BorderColor #334155
+  FontColor #0F172A
+}
+skinparam ArrowColor #475569
+skinparam linetype ortho
+left to right direction
+
+actor "Guest" as Guest
+actor "Authenticated User" as AuthUser
+actor "Admin" as Admin
+actor "Manager" as Manager
+actor "Teacher" as Teacher
+actor "Student" as Student
+actor "Employee" as Employee
+actor "Researcher" as Researcher
+
+Guest <|-- AuthUser
+AuthUser <|-- Admin
+AuthUser <|-- Employee
+Employee <|-- Manager
+Employee <|-- Teacher
+AuthUser <|-- Student
+Employee <|-- Researcher
+Teacher <|-- Researcher
+Student <|-- Researcher
+
+rectangle "University System" {
+  package "Account" {
+    usecase "View Help" as UC_Help
+    usecase "Login" as UC_Login
+    usecase "Logout" as UC_Logout
+    usecase "View Current User" as UC_Whoami
+    usecase "Save Data" as UC_Save
+    usecase "Authenticate User" as UC_Authenticate
+  }
+
+  package "Administration" {
+    usecase "Manage Users" as UC_ManageUsers
+    usecase "View Users" as UC_ViewUsers
+    usecase "View Requests" as UC_ViewRequests
+    usecase "Sign Request\nas Rector/Admin" as UC_SignRector
+  }
+
+  package "Course Management" {
+    usecase "View Courses" as UC_ViewCourses
+    usecase "View Students" as UC_ViewStudents
+    usecase "View Teachers" as UC_ViewTeachers
+    usecase "Assign Teacher\nto Course" as UC_AssignCourse
+    usecase "Approve Course\nRegistration" as UC_ApproveRegistration
+    usecase "Create Academic\nReport" as UC_Report
+  }
+
+  package "Student Workflow" {
+    usecase "Register for Course" as UC_RegisterCourse
+    usecase "View Transcript" as UC_ViewTranscript
+    usecase "Rate Teacher" as UC_RateTeacher
+  }
+
+  package "Teaching Workflow" {
+    usecase "Put Marks" as UC_PutMarks
+    usecase "View Assigned\nCourse Students" as UC_ViewCourseStudents
+    usecase "Send Complaint" as UC_SendComplaint
+  }
+
+  package "Employee Requests" {
+    usecase "Create Employee\nRequest" as UC_CreateRequest
+    usecase "Sign Request\nas Dean/Manager" as UC_SignDean
+  }
+
+  package "News" {
+    usecase "Publish News" as UC_PublishNews
+    usecase "Notify Users" as UC_NotifyUsers
+  }
+
+  package "Research" {
+    usecase "View Research Papers" as UC_ViewPapers
+    usecase "Sort Papers" as UC_SortPapers
+    usecase "Find Top Cited\nResearcher" as UC_TopResearcher
+    usecase "Find Top Researcher\nby Year" as UC_TopYear
+    usecase "Find Top Researcher\nby School and Year" as UC_TopSchoolYear
+    usecase "Create Research\nProject" as UC_CreateProject
+    usecase "Join Research\nProject" as UC_JoinProject
+    usecase "Add Paper" as UC_AddPaper
+    usecase "Assign Research\nSupervisor" as UC_AssignSupervisor
+    usecase "Validate Researcher" as UC_ValidateResearcher
+    usecase "Check Supervisor\nH-index" as UC_CheckHIndex
+  }
+}
+
+Guest --> UC_Help
+Guest --> UC_Login
+UC_Login ..> UC_Authenticate : <<include>>
+
+AuthUser --> UC_Help
+AuthUser --> UC_Logout
+AuthUser --> UC_Whoami
+AuthUser --> UC_Save
+AuthUser --> UC_ViewCourses
+AuthUser --> UC_ViewPapers
+AuthUser --> UC_TopResearcher
+AuthUser --> UC_TopYear
+AuthUser --> UC_TopSchoolYear
+AuthUser --> UC_CreateProject
+AuthUser --> UC_JoinProject
+
+Admin --> UC_ManageUsers
+Admin --> UC_ViewUsers
+Admin --> UC_ViewRequests
+Admin --> UC_SignRector
+
+Manager --> UC_ViewUsers
+Manager --> UC_ViewStudents
+Manager --> UC_ViewTeachers
+Manager --> UC_ApproveRegistration
+Manager --> UC_AssignCourse
+Manager --> UC_Report
+Manager --> UC_PublishNews
+Manager --> UC_ViewRequests
+Manager --> UC_SignDean
+Manager --> UC_CreateRequest
+
+Teacher --> UC_ViewStudents
+Teacher --> UC_ViewCourseStudents
+Teacher --> UC_PutMarks
+Teacher --> UC_ViewTranscript
+Teacher --> UC_SendComplaint
+Teacher --> UC_CreateRequest
+Teacher --> UC_AssignSupervisor
+
+Student --> UC_RegisterCourse
+Student --> UC_ViewTranscript
+Student --> UC_RateTeacher
+Student --> UC_AssignSupervisor
+
+Employee --> UC_CreateRequest
+Researcher --> UC_AddPaper
+Researcher --> UC_JoinProject
+
+UC_ViewPapers ..> UC_SortPapers : <<include>>
+UC_PublishNews ..> UC_NotifyUsers : <<include>>
+UC_JoinProject ..> UC_ValidateResearcher : <<include>>
+UC_AssignSupervisor ..> UC_CheckHIndex : <<include>>
+UC_PutMarks ..> UC_ViewCourseStudents : <<include>>
+
+UC_TopYear ..> UC_TopResearcher : <<extend>>
+UC_TopSchoolYear ..> UC_TopResearcher : <<extend>>
+UC_SignDean ..> UC_ViewRequests : <<extend>>
+UC_SignRector ..> UC_ViewRequests : <<extend>>
+
+
+note right of Researcher
+  Researcher is a role implemented directly by ResearchEmployee
+  and added to teachers/students through DefaultResearcher.
+end note
+
+@enduml
